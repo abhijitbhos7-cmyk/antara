@@ -24,3 +24,77 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+:root {
+  --antara-bg: #080a18;
+  --antara-surface: #0e1024;
+  --antara-card: #15172d;
+  --antara-card-hover: #1d2040;
+  --antara-text: #f8f3ee;
+  --antara-muted: #a9a7ba;
+  --antara-border: #272a45;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--antara-bg);
+  color: var(--antara-text);
+}
+
+::selection {
+  background: #9b6dff;
+  color: #f8f3ee;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #5b8cff #0e1024;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0e1024;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #272a45;
+  border: 2px solid #0e1024;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #5b8cff;
+}
+@keyframes modalOverlayFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(32px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-overlay {
+  animation: modalOverlayFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-modal {
+  animation: modalSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}

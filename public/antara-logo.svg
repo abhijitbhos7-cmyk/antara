@@ -1,0 +1,105 @@
+<svg
+  width="240"
+  height="220"
+  viewBox="0 0 240 220"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <defs>
+    <!-- British Racing Green to Soft Mint Gradient -->
+    <linearGradient id="antaraGradient" x1="28" y1="186" x2="184" y2="22" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#14452F" />
+      <stop offset="0.38" stop-color="#1C5E40" />
+      <stop offset="0.72" stop-color="#369B6C" />
+      <stop offset="1" stop-color="#8CE0B7" />
+    </linearGradient>
+
+    <!-- Warm/Mint Inner Glow -->
+    <radialGradient id="orbGlow" cx="0" cy="0" r="1" gradientTransform="translate(106 78) rotate(90) scale(24)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF" />
+      <stop offset="0.6" stop-color="#A9E0C4" />
+      <stop offset="1" stop-color="#369B6C" />
+    </radialGradient>
+
+    <!-- Soft outer glow filter -->
+    <filter id="softGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="3.5" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Antara meditation mark -->
+  <g transform="translate(16 8)">
+    <!-- Halo -->
+    <circle
+      cx="106"
+      cy="103"
+      r="82"
+      stroke="url(#antaraGradient)"
+      stroke-width="4"
+      opacity="0.9"
+      filter="url(#softGlow)"
+    />
+
+    <!-- Crown / inner flame -->
+    <path
+      d="M106 27C106 45 84 49 84 65C84 76 93 82 106 84C119 82 128 76 128 65C128 49 106 45 106 27Z"
+      fill="url(#antaraGradient)"
+      filter="url(#softGlow)"
+    />
+
+    <path
+      d="M106 39C106 52 95 58 95 67C95 73 100 77 106 79C112 77 117 73 117 67C117 58 106 52 106 39Z"
+      fill="#FFFFFF"
+    />
+
+    <!-- Head -->
+    <circle cx="106" cy="87" r="14" fill="url(#orbGlow)" filter="url(#softGlow)" />
+
+    <!-- Body -->
+    <path
+      d="M106 103C88 103 79 116 79 134C79 146 84 157 91 164H121C128 157 133 146 133 134C133 116 124 103 106 103Z"
+      fill="url(#antaraGradient)"
+    />
+
+    <!-- Arms -->
+    <path
+      d="M83 122C73 139 67 148 52 157"
+      stroke="url(#antaraGradient)"
+      stroke-width="7"
+      stroke-linecap="round"
+    />
+    <path
+      d="M129 122C139 139 145 148 160 157"
+      stroke="url(#antaraGradient)"
+      stroke-width="7"
+      stroke-linecap="round"
+    />
+
+    <!-- Lotus pose -->
+    <path
+      d="M106 151C82 151 61 162 46 177C65 181 83 178 98 169C101 176 105 180 106 181C107 180 111 176 114 169C129 178 147 181 166 177C151 162 130 151 106 151Z"
+      fill="url(#antaraGradient)"
+      filter="url(#softGlow)"
+    />
+
+    <!-- Water ripples -->
+    <path
+      d="M35 188C58 179 78 181 100 190C120 198 145 198 177 187"
+      stroke="#14452F"
+      stroke-width="4"
+      stroke-linecap="round"
+      opacity="0.95"
+    />
+    <path
+      d="M48 201C70 194 88 197 106 204C124 211 147 211 166 201"
+      stroke="#369B6C"
+      stroke-width="3.5"
+      stroke-linecap="round"
+      opacity="0.82"
+    />
+  </g>
+</svg>
