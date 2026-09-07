@@ -4,10 +4,8 @@ export async function POST(req) {
   try {
     const { audioUrl } = await req.json();
     
-    
     const audioRes = await fetch(audioUrl);
     const audioBlob = await audioRes.blob();
-    
     
     const formData = new FormData();
     formData.append('file', audioBlob, 'audio.webm');
@@ -20,16 +18,18 @@ export async function POST(req) {
     });
     
     const transcribeData = await transcribeRes.json();
-    const transcript = transcribeData.text;
-
-    if (!transcript) {
+    
+    
+    if (!transcribeData.text) {
+        console.error("Groq Transcription Error:", transcribeData);
         return NextResponse.json({ 
             message: "I couldn't quite hear that. Take a deep breath and try recording again.", 
             suggestedTopic: "Calm" 
         });
     }
 
-    
+    const transcript = transcribeData.text;
+
     const chatRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -53,11 +53,23 @@ export async function POST(req) {
     });
 
     const chatData = await chatRes.json();
+    
+    console.log("Raw Groq AI Response:", chatData);
+
+    if (!chatData.choices || !chatData.choices[0]) {
+        console.error("Groq API failed to return valid 'choices'. Sending fallback response.");
+        return NextResponse.json({ 
+            message: "I hear you. Let's take a moment to center ourselves with this session.", 
+            suggestedTopic: "Calm" 
+        });
+    }
+     
+
     const analysis = JSON.parse(chatData.choices[0].message.content);
 
     return NextResponse.json(analysis);
   } catch (error) {
-    console.error(error);
+    console.error("Server Route Error:", error);
     return NextResponse.json(
         { message: "It seems you might need a moment of peace right now. Let's try this session.", suggestedTopic: "Calm" }, 
         { status: 200 }

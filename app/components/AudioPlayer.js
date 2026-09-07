@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Pause, Play, Volume2, X, Activity, Waves } from "lucide-react";
+import { Pause, Play, X, Activity, Waves, Mic } from "lucide-react";
 
 function formatTime(seconds) {
   const minutes = Math.floor(seconds / 60);
@@ -10,13 +10,12 @@ function formatTime(seconds) {
 }
 
 const brainwaveFrequencies = [
-  { label: "Off - No Frequency", value: 0 },
-  { label: "4 Hz - Delta (Deep Sleep)", value: 4 },
-  { label: "40 Hz - Gamma (Deep Focus)", value: 40 },
-  { label: "396 Hz - Solfeggio (Liberation)", value: 396 },
-  { label: "432 Hz - Solfeggio (Healing)", value: 432 },
-  { label: "528 Hz - Solfeggio (DNA Repair)", value: 528 },
-  { label: "639 Hz - Solfeggio (Connection)", value: 639 }
+  { label: "None", value: 0 },
+  { label: "4 Hz", value: 4 },
+  { label: "40 Hz", value: 40 },
+  { label: "396 Hz", value: 396 },
+  { label: "432 Hz", value: 432 },
+  { label: "528 Hz", value: 528 }
 ];
 
 export default function AudioPlayer({ program, onClose, onComplete }) {
@@ -27,47 +26,41 @@ export default function AudioPlayer({ program, onClose, onComplete }) {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   
-  
   const [voiceVolume, setVoiceVolume] = useState(0.9);
   const [ambienceVolume, setAmbienceVolume] = useState(0.25);
   const [freqVolume, setFreqVolume] = useState(0.1);
   const [selectedFreq, setSelectedFreq] = useState(0);
+  const [selectedAmbience, setSelectedAmbience] = useState("");
 
-  const [error, setError] = useState("");
   const [isVisible, setIsVisible] = useState(false);
-
-  
   const audioCtxRef = useRef(null);
   const oscRef = useRef(null);
   const freqGainRef = useRef(null);
 
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
+  useEffect(() => { setIsVisible(true); }, []);
+  useEffect(() => { setSelectedAmbience(program.ambienceUrl || ""); }, [program.id, program.ambienceUrl]);
 
   useEffect(() => {
     setCurrentTime(0);
     setDuration(program.duration ? program.duration * 60 : 0);
-    setError("");
-
     const startAudio = async () => {
       if (programAudioRef.current && program.audioUrl) {
         programAudioRef.current.volume = voiceVolume;
-        programAudioRef.current.play().catch(() => console.log("Voice audio missing, running in silent mode."));
+        programAudioRef.current.play().catch(() => {});
       }
-      
-      if (ambienceAudioRef.current && program.ambienceUrl) {
-        ambienceAudioRef.current.volume = ambienceVolume;
-        ambienceAudioRef.current.play().catch(() => console.log("Ambience audio missing, running in silent mode."));
-      }
-      
       setIsPlaying(true);
     };
-
     startAudio();
   }, [program.id, program.duration]);
 
-  
+  useEffect(() => {
+    if (ambienceAudioRef.current) {
+      ambienceAudioRef.current.volume = ambienceVolume;
+      if (isPlaying && selectedAmbience) ambienceAudioRef.current.play().catch(() => {});
+      else ambienceAudioRef.current.pause();
+    }
+  }, [selectedAmbience, isPlaying]);
+
   useEffect(() => {
     let interval;
     if (isPlaying) {
@@ -75,23 +68,13 @@ export default function AudioPlayer({ program, onClose, onComplete }) {
         setCurrentTime((prevTime) => {
           const customLimit = program.duration ? program.duration * 60 : duration;
           const nextTime = prevTime + 1;
-          
           if (customLimit > 0 && nextTime >= customLimit) {
-            clearInterval(interval);
-            setIsPlaying(false);
-            
+            clearInterval(interval); setIsPlaying(false);
             if (programAudioRef.current) programAudioRef.current.pause();
             if (ambienceAudioRef.current) ambienceAudioRef.current.pause();
-            
             onComplete?.();
-            
-            setTimeout(() => {
-              alert(`✨ Session Complete!\n\nYour ${program.duration}-minute session has ended successfully.`);
-            }, 100);
-            
             return customLimit;
           }
-          
           return nextTime;
         });
       }, 1000); 
@@ -99,285 +82,160 @@ export default function AudioPlayer({ program, onClose, onComplete }) {
     return () => clearInterval(interval);
   }, [isPlaying, program.duration, duration, onComplete]);
 
-  
-  useEffect(() => {
-    if (programAudioRef.current) programAudioRef.current.volume = voiceVolume;
-  }, [voiceVolume]);
+  useEffect(() => { if (programAudioRef.current) programAudioRef.current.volume = voiceVolume; }, [voiceVolume]);
+  useEffect(() => { if (ambienceAudioRef.current) ambienceAudioRef.current.volume = ambienceVolume; }, [ambienceVolume]);
 
-  useEffect(() => {
-    if (ambienceAudioRef.current) ambienceAudioRef.current.volume = ambienceVolume;
-  }, [ambienceVolume]);
-
-
-  
   useEffect(() => {
     if (selectedFreq === 0) {
-      if (oscRef.current) {
-        oscRef.current.stop();
-        oscRef.current.disconnect();
-        oscRef.current = null;
-      }
+      if (oscRef.current) { oscRef.current.stop(); oscRef.current.disconnect(); oscRef.current = null; }
       return;
     }
-
-    if (!audioCtxRef.current) {
-      audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)();
-    }
+    if (!audioCtxRef.current) audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)();
     const ctx = audioCtxRef.current;
-
     if (!oscRef.current) {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
-      
-      osc.type = 'sine'; 
-      
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      
-      osc.start();
-      oscRef.current = osc;
-      freqGainRef.current = gain;
+      osc.type = 'sine'; osc.connect(gain); gain.connect(ctx.destination);
+      osc.start(); oscRef.current = osc; freqGainRef.current = gain;
     }
-
-   
     oscRef.current.frequency.setValueAtTime(selectedFreq, ctx.currentTime);
-    
-    if (freqGainRef.current) {
-      freqGainRef.current.gain.setTargetAtTime(freqVolume, ctx.currentTime, 0.015);
-    }
+    if (freqGainRef.current) freqGainRef.current.gain.setTargetAtTime(freqVolume, ctx.currentTime, 0.015);
   }, [selectedFreq]);
 
-  
-  useEffect(() => {
-    if (freqGainRef.current && audioCtxRef.current) {
-      freqGainRef.current.gain.setTargetAtTime(freqVolume, audioCtxRef.current.currentTime, 0.015);
-    }
-  }, [freqVolume]);
-
+  useEffect(() => { if (freqGainRef.current && audioCtxRef.current) freqGainRef.current.gain.setTargetAtTime(freqVolume, audioCtxRef.current.currentTime, 0.015); }, [freqVolume]);
   
   useEffect(() => {
     if (audioCtxRef.current) {
-      if (isPlaying && audioCtxRef.current.state === 'suspended') {
-        audioCtxRef.current.resume();
-      } else if (!isPlaying && audioCtxRef.current.state === 'running') {
-        audioCtxRef.current.suspend();
-      }
+      if (isPlaying && audioCtxRef.current.state === 'suspended') audioCtxRef.current.resume();
+      else if (!isPlaying && audioCtxRef.current.state === 'running') audioCtxRef.current.suspend();
     }
   }, [isPlaying]);
 
-  
-  useEffect(() => {
-    return () => {
-      if (oscRef.current) {
-        try { oscRef.current.stop(); } catch(e){}
-      }
-      if (audioCtxRef.current) {
-        audioCtxRef.current.close();
-      }
-    }
-  }, []);
- 
-
   async function togglePlayback() {
     const programAudio = programAudioRef.current;
-    const ambienceAudio = ambienceAudioRef.current;
-
     if (!programAudio) return;
-
-    if (isPlaying) {
-      programAudio.pause();
-      ambienceAudio?.pause();
-      setIsPlaying(false);
-      return;
-    }
-
-    if (currentTime >= duration) {
-      setCurrentTime(0);
-      if (programAudio) programAudio.currentTime = 0;
-      if (ambienceAudio) ambienceAudio.currentTime = 0;
-    }
-
-    if (programAudio && program.audioUrl) {
-      programAudio.play().catch(() => console.log("Voice audio missing."));
-    }
-    
-    if (ambienceAudio && program.ambienceUrl) {
-      ambienceAudio.play().catch(() => console.log("Ambience audio missing."));
-    }
-    
+    if (isPlaying) { programAudio.pause(); setIsPlaying(false); return; }
+    if (currentTime >= duration) { setCurrentTime(0); programAudio.currentTime = 0; }
+    programAudio.play().catch(() => {});
     setIsPlaying(true);
-    setError(""); 
-  }
-
-  function handleEnded() {
-    const customLimit = program.duration ? program.duration * 60 : 0;
-    if (customLimit > 0 && currentTime < customLimit) {
-      return; 
-    }
-
-    setIsPlaying(false);
-    ambienceAudioRef.current?.pause();
-    onComplete?.();
   }
 
   function handleClose() {
     setIsVisible(false);
-    setTimeout(() => onClose(), 300);
+    setTimeout(() => onClose(), 500);
   }
 
   return (
+    
     <section 
-      className={`fixed bottom-0 left-0 right-0 z-50 border-t border-white/40 bg-white/75 px-4 py-4 backdrop-blur-2xl shadow-[0_-10px_40px_rgba(0,0,0,0.1)] transition-transform duration-500 ease-out md:px-6 ${
+      className={`fixed bottom-0 left-0 right-0 z-[1000] w-full h-[96px] bg-[#0b3d33] border-t border-[#122d22] text-white flex items-center px-4 md:px-6 transition-transform duration-500 ease-out shadow-[0_-10px_30px_rgba(0,0,0,0.2)] ${
         isVisible ? "translate-y-0" : "translate-y-full"
       }`}
     >
-      <div className="absolute inset-0 bg-gradient-to-r from-[#0b3d33]/10 via-transparent to-[#0b3d33]/10 opacity-60 animate-[pulse_4s_ease-in-out_infinite] pointer-events-none"></div>
+      <audio ref={programAudioRef} src={program.audioUrl || null} preload="metadata" onLoadedMetadata={(e) => { if (!program.duration) setDuration(e.currentTarget.duration); }} />
+      <audio ref={ambienceAudioRef} src={selectedAmbience || null} loop preload="auto" />
 
-      <audio
-        ref={programAudioRef}
-        src={program.audioUrl}
-        preload="metadata"
-        onLoadedMetadata={(event) => {
-          if (!program.duration) {
-            setDuration(event.currentTarget.duration);
-          }
-        }}
-        onEnded={handleEnded}
-      />
-
-      {program.ambienceUrl && (
-        <audio ref={ambienceAudioRef} src={program.ambienceUrl} loop preload="auto" />
-      )}
-
-      <div className="relative z-10 mx-auto flex max-w-7xl flex-col gap-3 md:flex-row md:items-center md:justify-between md:gap-8">
-        
-        
-        <div className="flex items-center justify-between gap-4 md:w-1/4">
-          <div className="flex items-center gap-3 min-w-0">
-            <img
-              src={program.image}
-              alt=""
-              className={`h-12 w-12 shrink-0 rounded-full object-cover shadow-md transition-all duration-700 md:h-14 md:w-14 ${
-                isPlaying ? "animate-[spin_6s_linear_infinite]" : ""
-              }`}
-            />
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-bold text-gray-900 md:text-base">{program.title}</p>
-              <p className="truncate text-xs font-medium text-gray-500">
-                {program.topic} Session
-              </p>
-            </div>
-          </div>
-
-          <button
-            onClick={handleClose}
-            aria-label="Close player"
-            className="rounded-full p-2 text-gray-500 transition hover:bg-white/50 hover:text-gray-900 md:hidden"
-          >
-            <X className="h-5 w-5" />
-          </button>
-        </div>
-
-        
-        <div className="flex flex-1 flex-col items-center gap-1.5">
-          <div className="flex items-center gap-4">
-            <button
-              onClick={togglePlayback}
-              aria-label={isPlaying ? "Pause session" : "Play session"}
-              className={`flex h-9 w-9 items-center justify-center rounded-full bg-[#0b3d33] text-white transition-all hover:scale-105 md:h-10 md:w-10 ${
-                isPlaying ? "shadow-[0_0_15px_rgba(20,69,47,0.5)] animate-[pulse_2s_ease-in-out_infinite]" : "shadow-md shadow-[#0b3d33]/30"
-              }`}
-            >
-              {isPlaying ? (
-                <Pause className="h-4 w-4 fill-current md:h-5 md:w-5" />
-              ) : (
-                <Play className="h-4 w-4 fill-current ml-0.5 md:h-5 md:w-5" />
-              )}
-            </button>
-          </div>
-
-          <div className="flex w-full max-w-md items-center gap-2 text-[11px] font-medium text-gray-500">
-            <span className="w-8 text-right">{formatTime(currentTime)}</span>
-            <input
-              type="range"
-              min="0"
-              max={duration || 0}
-              step="1"
-              value={currentTime}
-              onChange={(event) => {
-                const value = Number(event.target.value);
-                setCurrentTime(value);
-                if (programAudioRef.current && value <= (programAudioRef.current.duration || 0)) {
-                  programAudioRef.current.currentTime = value;
-                }
-              }}
-              className="h-1.5 flex-1 cursor-pointer appearance-none rounded-full bg-black/10 accent-[#0b3d33]"
-            />
-            <span className="w-8">{formatTime(duration)}</span>
-          </div>
-        </div>
-
-       
-        <div className="hidden lg:flex w-[40%] items-center justify-end gap-5">
-          
-          <div className="flex flex-col gap-2 border-r border-gray-300 pr-5">
-            
-            <div className="flex items-center gap-2" title="Guide Volume">
-              <Volume2 className="h-3.5 w-3.5 text-[#0b3d33]" />
-              <input
-                type="range" min="0" max="1" step="0.05" value={voiceVolume}
-                onChange={(e) => setVoiceVolume(Number(e.target.value))}
-                className="h-1.5 w-20 cursor-pointer appearance-none rounded-full bg-black/10 accent-[#0b3d33]"
-              />
-            </div>
-           
-            <div className="flex items-center gap-2" title="Ambience Volume">
-              <Waves className="h-3.5 w-3.5 text-blue-600" />
-              <input
-                type="range" min="0" max="1" step="0.05" value={ambienceVolume}
-                onChange={(e) => setAmbienceVolume(Number(e.target.value))}
-                className="h-1.5 w-20 cursor-pointer appearance-none rounded-full bg-black/10 accent-blue-600"
-              />
-            </div>
-          </div>
-
-          
-          <div className="flex flex-col gap-2 pr-2">
-            <select 
-              value={selectedFreq} 
-              onChange={(e) => setSelectedFreq(Number(e.target.value))}
-              className="text-[10px] font-bold text-gray-700 bg-gray-100/80 rounded-md px-1.5 py-1 outline-none border border-gray-200 cursor-pointer w-[150px]"
-            >
-              {brainwaveFrequencies.map(freq => (
-                <option key={freq.value} value={freq.value}>{freq.label}</option>
-              ))}
-            </select>
-            
-            <div className={`flex items-center gap-2 transition-opacity ${selectedFreq === 0 ? "opacity-30 pointer-events-none" : "opacity-100"}`} title="Frequency Volume">
-              <Activity className="h-3.5 w-3.5 text-purple-600" />
-              <input
-                type="range" min="0" max="0.5" step="0.01" value={freqVolume}
-                onChange={(e) => setFreqVolume(Number(e.target.value))}
-                className="h-1.5 flex-1 cursor-pointer appearance-none rounded-full bg-black/10 accent-purple-600"
-              />
-            </div>
-          </div>
-
-          <button
-            onClick={handleClose}
-            aria-label="Close player"
-            className="rounded-full p-2 text-gray-500 transition hover:bg-white/50 hover:text-gray-900 ml-2"
-          >
-            <X className="h-5 w-5" />
-          </button>
+     
+      <div className="flex items-center gap-4 w-[30%] min-w-[200px]">
+        <img 
+          src={program.image} 
+          alt={program.title} 
+          className="h-14 w-14 rounded-md object-cover shadow-md border border-white/10 shrink-0" 
+        />
+        <div className="flex flex-col min-w-0 pr-4">
+          <h3 className="text-white font-bold text-sm truncate tracking-tight hover:underline cursor-pointer">
+            {program.title}
+          </h3>
+          <p className="text-white/60 text-[11px] font-medium truncate mt-0.5 hover:underline cursor-pointer">
+            {program.topic}
+          </p>
         </div>
       </div>
+
       
-      {error && <p className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 rounded-lg bg-red-50/90 backdrop-blur-sm px-4 py-2 text-sm text-red-600 shadow-lg">{error}</p>}
+      <div className="flex-1 max-w-[722px] mx-auto flex flex-col justify-center items-center px-4">
+        
+        <div className="flex items-center gap-6 mb-2">
+          <button 
+            onClick={togglePlayback} 
+            className="w-9 h-9 rounded-full bg-white text-black flex items-center justify-center transition-all hover:scale-105 active:scale-95 shadow-md"
+          >
+            {isPlaying ? <Pause className="h-4 w-4 fill-current" /> : <Play className="h-4 w-4 fill-current ml-0.5" />}
+          </button>
+        </div>
+        
+        
+        <div className="flex items-center gap-2 w-full max-w-[600px] text-[11px] font-medium text-white/60">
+          <span className="w-10 text-right">{formatTime(currentTime)}</span>
+          <div className="relative flex-1 h-1.5 flex items-center group">
+            <input 
+              type="range" 
+              min="0" 
+              max={duration || 0} 
+              step="1" 
+              value={currentTime} 
+              onChange={(e) => { 
+                const val = Number(e.target.value); 
+                setCurrentTime(val); 
+                if (programAudioRef.current && val <= (programAudioRef.current.duration || 0)) programAudioRef.current.currentTime = val; 
+              }} 
+              className="absolute z-20 w-full h-full opacity-0 cursor-pointer" 
+            />
+            <div className="w-full h-1 bg-white/20 rounded-full overflow-hidden group-hover:h-1.5 transition-all">
+              <div 
+                className="h-full bg-white group-hover:bg-[#1db954] transition-all duration-100 ease-linear rounded-full" 
+                style={{ width: `${(currentTime / (duration || 1)) * 100}%` }}
+              ></div>
+            </div>
+          </div>
+          <span className="w-10">{formatTime(duration)}</span>
+        </div>
+      </div>
+
+     
+      <div className="flex items-center justify-end gap-3 w-[30%] min-w-[280px]">
+        
+        
+        <div className="bg-black/20 hover:bg-black/40 transition-colors rounded-xl p-2 flex flex-col items-center justify-between w-[64px] border border-white/5">
+          <Mic className="w-3.5 h-3.5 text-white/90 mb-1"/>
+          <span className="text-[8px] uppercase tracking-widest font-bold text-white/50 mb-1.5">Guide</span>
+          <input type="range" min="0" max="1" step="0.05" value={voiceVolume} onChange={(e) => setVoiceVolume(Number(e.target.value))} className="w-full h-1 cursor-pointer appearance-none rounded-full bg-black/40 accent-white hover:h-1.5 transition-all" />
+        </div>
+
+        
+        <div className="bg-black/20 hover:bg-black/40 transition-colors rounded-xl p-2 flex flex-col items-center justify-between w-[72px] border border-white/5">
+          <Waves className="w-3.5 h-3.5 text-[#93c5fd] mb-1"/>
+          <select value={selectedAmbience} onChange={(e) => setSelectedAmbience(e.target.value)} className="text-[8px] uppercase tracking-widest font-bold text-[#93c5fd] bg-transparent outline-none text-center w-full appearance-none mb-1.5 cursor-pointer hover:text-white transition-colors">
+            <option value="" className="bg-[#0b3d33]">None</option>
+            <option value="/audio/ambience/rain.mp3" className="bg-[#0b3d33]">Rain</option>
+            <option value="/audio/ambience/waves.mp3" className="bg-[#0b3d33]">Waves</option>
+            <option value="/audio/ambience/tanpura.mp3" className="bg-[#0b3d33]">Tanpura</option>
+            <option value="/audio/ambience/focus.mp3" className="bg-[#0b3d33]">Focus</option>
+          </select>
+          <input type="range" min="0" max="1" step="0.05" value={ambienceVolume} onChange={(e) => setAmbienceVolume(Number(e.target.value))} className="w-full h-1 cursor-pointer appearance-none rounded-full bg-black/40 accent-[#93c5fd] hover:h-1.5 transition-all" />
+        </div>
+
+        
+        <div className="bg-black/20 hover:bg-black/40 transition-colors rounded-xl p-2 flex flex-col items-center justify-between w-[72px] border border-white/5">
+          <Activity className="w-3.5 h-3.5 text-[#d8b4fe] mb-1"/>
+          <select value={selectedFreq} onChange={(e) => setSelectedFreq(Number(e.target.value))} className="text-[8px] uppercase tracking-widest font-bold text-[#d8b4fe] bg-transparent outline-none text-center w-full appearance-none mb-1.5 cursor-pointer hover:text-white transition-colors">
+            {brainwaveFrequencies.map(freq => <option key={freq.value} value={freq.value} className="bg-[#0b3d33]">{freq.label}</option>)}
+          </select>
+          <input type="range" min="0" max="0.5" step="0.01" value={freqVolume} onChange={(e) => setFreqVolume(Number(e.target.value))} className="w-full h-1 cursor-pointer appearance-none rounded-full bg-black/40 accent-[#d8b4fe] hover:h-1.5 transition-all" />
+        </div>
+
+        
+        <div className="pl-3 ml-1 border-l border-white/10 flex items-center">
+          <button 
+            onClick={handleClose} 
+            className="p-1.5 text-white/50 hover:text-white hover:bg-white/10 rounded-full transition-colors active:scale-95"
+            title="Close Player"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+      </div>
     </section>
   );
 }
-
-
-
-

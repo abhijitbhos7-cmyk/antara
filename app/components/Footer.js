@@ -4,9 +4,9 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="mt-12 w-full border-t border-gray-200 pt-8 pb-8">
+    
+    <footer className="mt-12 w-full border-t border-gray-200 px-6 pt-8 pb-8 md:px-12 md:pb-12">
       <div className="flex flex-col justify-between gap-12 xl:flex-row">
-        
         
         <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 xl:w-3/4">
           <div>
@@ -46,21 +46,19 @@ export default function Footer() {
           </div>
         </div>
 
-        
         <div className="flex gap-4 xl:justify-end">
-          <button aria-label="Instagram" className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-gray-700 transition hover:bg-[#0b3d33] hover:text-white">
+          <button aria-label="Instagram" className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-gray-700 transition hover:bg-[#0b3d33] hover:text-white hover:scale-105 active:scale-95">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
           </button>
-          <button aria-label="Twitter" className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-gray-700 transition hover:bg-[#0b3d33] hover:text-white">
+          <button aria-label="Twitter" className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-gray-700 transition hover:bg-[#0b3d33] hover:text-white hover:scale-105 active:scale-95">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
           </button>
-          <button aria-label="Facebook" className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-gray-700 transition hover:bg-[#0b3d33] hover:text-white">
+          <button aria-label="Facebook" className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-gray-700 transition hover:bg-[#0b3d33] hover:text-white hover:scale-105 active:scale-95">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
           </button>
         </div>
       </div>
 
-      
       <div className="mt-8 flex flex-col items-start justify-between gap-4 border-t border-gray-200 pt-4 text-xs font-medium text-gray-500 md:flex-row md:items-center">
         <div className="flex flex-wrap gap-4 md:gap-6">
           <Link href="/info/legal" className="transition hover:text-[#0b3d33]">Legal</Link>

@@ -31,7 +31,6 @@ export default function VoiceRecorder({ user, onRequireAuth, onPlayRecommended }
   const [loopStatus, setLoopStatus] = useState("");
   const [loopAmbience, setLoopAmbience] = useState("/audio/ambience/waves.mp3");
 
-  
   const [analyzingId, setAnalyzingId] = useState(null);
   const [aiInsights, setAiInsights] = useState({});
 
@@ -247,118 +246,116 @@ export default function VoiceRecorder({ user, onRequireAuth, onPlayRecommended }
   }
 
   return (
-    <div className="rounded-3xl border border-gray-100 bg-white p-6 shadow-sm">
+    <div className="rounded-[2.5rem] bg-[#F8F5F0] border border-[#0b3d33]/15 p-6 md:p-10 shadow-sm relative overflow-hidden">
       <audio ref={ambienceAudioRef} loop preload="auto" />
 
-      <div className="mb-5 flex items-center gap-3">
-        <div className="rounded-xl bg-[#0b3d33]/10 p-3 text-[#0b3d33]">
-          <Mic className="h-5 w-5" />
+      <div className="mb-6 flex items-center gap-4">
+        <div className="rounded-2xl bg-[#0b3d33]/10 p-3.5 text-[#0b3d33] shadow-sm">
+          <Mic className="h-6 w-6" />
         </div>
         <div>
-          <p className="font-bold text-gray-900">Record your own voice</p>
-          <p className="text-sm text-gray-500">Your affirmations are private to your Antara account.</p>
+          <p className="font-serif text-2xl font-bold text-[#0f172a] tracking-tight">Record your own voice</p>
+          <p className="text-sm font-medium text-gray-500 mt-0.5">Your affirmations are strictly private to your account.</p>
         </div>
       </div>
 
       <button
         onClick={toggleRecording}
-        className={`flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3.5 font-bold transition shadow-sm ${
+        className={`flex w-full items-center justify-center gap-2 rounded-full border px-4 py-4 font-bold text-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),_0_6px_12px_rgba(0,0,0,0.15)] transition-all hover:-translate-y-0.5 active:scale-[0.98] ${
           isRecording
-            ? "bg-red-500 text-white animate-pulse"
-            : "bg-[#0b3d33] text-white hover:scale-[1.02]"
+            ? "border-red-900 bg-gradient-to-b from-red-500 to-red-700 animate-pulse"
+            : "border-[#041c17] bg-gradient-to-b from-[#0b3d33] to-[#072a23]"
         }`}
       >
-        <Mic className="h-4 w-4" />
+        <Mic className="h-5 w-5 drop-shadow-md" />
         {isRecording ? "Stop recording" : "Record an affirmation"}
       </button>
 
-      {status && <p className="mt-4 text-center text-sm font-medium text-gray-600">{status}</p>}
+      {status && <p className="mt-4 text-center text-sm font-bold text-[#0b3d33] animate-pulse">{status}</p>}
 
       {recordings.length > 0 && (
-        <div className="mt-8 rounded-2xl bg-gradient-to-br from-[#FAFAFA] to-gray-50 border border-gray-100 p-5">
+        <div className="mt-8 rounded-3xl bg-white/60 border border-[#0b3d33]/15 p-6 shadow-sm">
           <div className="flex items-center gap-2 mb-2">
-            <Sparkles className="h-4 w-4 text-[#0b3d33]" />
-            <h3 className="text-sm font-bold text-gray-900">Vocal Loop Engine</h3>
+            <Sparkles className="h-5 w-5 text-[#0b3d33]" />
+            <h3 className="text-lg font-serif font-bold text-[#0f172a]">Vocal Loop Engine</h3>
           </div>
-          <p className="text-xs text-gray-500 mb-4">Select an ambience. Click "Deep Loop" on any track to add cinematic echo and loop it infinitely.</p>
+          <p className="text-sm font-medium text-gray-500 mb-5">Select an ambience. Click "Deep Loop" on any track to add a cinematic echo and loop it infinitely.</p>
           <select
             value={loopAmbience}
             onChange={(e) => setLoopAmbience(e.target.value)}
-            className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-900 outline-none focus:border-[#0b3d33] focus:ring-1 focus:ring-[#0b3d33]"
+            className="w-full cursor-pointer rounded-2xl border border-[#0b3d33]/15 bg-white/80 px-4 py-3 font-medium text-[#0f172a] shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] outline-none transition focus:border-[#0b3d33] focus:bg-white focus:ring-1 focus:ring-[#0b3d33]"
           >
             <option value="/audio/ambience/waves.mp3">Ocean Waves</option>
             <option value="/audio/ambience/rain.mp3">Soft Rain</option>
             <option value="/audio/ambience/tanpura.mp3">Gentle Tanpura</option>
             <option value="/audio/ambience/focus.mp3">Focus Ambience</option>
           </select>
-          {loopStatus && <p className="mt-3 text-xs font-bold text-[#0b3d33] animate-pulse">{loopStatus}</p>}
+          {loopStatus && <p className="mt-4 text-sm font-bold text-[#0b3d33] animate-pulse">{loopStatus}</p>}
         </div>
       )}
 
       {recordings.length > 0 && (
-        <div className="mt-5 space-y-3 border-t border-gray-100 pt-5">
+        <div className="mt-6 space-y-4">
           {recordings.map((recording) => (
             <div
               key={recording.id}
-              className={`flex flex-col gap-3 rounded-2xl border p-4 transition-all ${
-                loopRecordingId === recording.id ? "bg-[#0b3d33]/5 border-[#0b3d33]/30" : "bg-gray-50 border-gray-100"
+              className={`flex flex-col gap-4 rounded-3xl border p-5 transition-all ${
+                loopRecordingId === recording.id ? "bg-[#E9E2D5] border-[#0b3d33]/20 shadow-inner" : "bg-white/60 border-[#0b3d33]/10 hover:border-[#0b3d33]/20 hover:bg-white/90 shadow-sm"
               }`}
             >
               <div className="flex items-center justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="truncate text-sm font-bold text-gray-900">{recording.title}</p>
-                  <p className="text-xs font-medium text-gray-400">{new Date(recording.created_at).toLocaleDateString()}</p>
+                  <p className="truncate font-serif text-lg font-bold text-[#0f172a]">{recording.title}</p>
+                  <p className="text-xs font-bold uppercase tracking-widest text-[#0b3d33]/60 mt-0.5">{new Date(recording.created_at).toLocaleDateString()}</p>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <button onClick={() => deleteRecording(recording)} aria-label="Delete recording" className="rounded-full p-2 text-gray-400 transition hover:bg-red-50 hover:text-red-500">
-                    <Trash2 className="h-4 w-4" />
+                  <button onClick={() => deleteRecording(recording)} aria-label="Delete recording" className="rounded-full p-2.5 text-gray-400 transition hover:bg-red-50 hover:text-red-600">
+                    <Trash2 className="h-5 w-5" />
                   </button>
                 </div>
               </div>
 
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center flex-wrap">
                 {recording.url && (
-                  <audio controls src={recording.url} className="h-8 w-full sm:flex-1 min-w-[200px]" />
+                  <audio controls src={recording.url} className="h-10 w-full sm:flex-1 min-w-[200px]" />
                 )}
-                
                 
                 <button
                   onClick={() => analyzeMood(recording)}
                   disabled={analyzingId === recording.id}
-                  className="flex shrink-0 items-center justify-center gap-2 rounded-full px-5 py-2 text-xs font-bold transition bg-purple-50 text-purple-700 hover:bg-purple-100 disabled:opacity-50 border border-purple-200"
+                  className="flex shrink-0 items-center justify-center gap-2 rounded-full border border-purple-200/50 bg-gradient-to-b from-purple-50 to-purple-100 px-5 py-2.5 text-xs font-bold text-purple-700 shadow-sm transition hover:scale-105 active:scale-95 disabled:opacity-50"
                 >
-                  {analyzingId === recording.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <Brain className="h-3 w-3" />}
+                  {analyzingId === recording.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Brain className="h-4 w-4" />}
                   Analyze Mood
                 </button>
 
-                
                 <button
                   onClick={() => toggleVocalLoop(recording)}
-                  className={`flex shrink-0 items-center justify-center gap-2 rounded-full px-5 py-2 text-xs font-bold transition ${
+                  className={`flex shrink-0 items-center justify-center gap-2 rounded-full px-5 py-2.5 text-xs font-bold transition-all active:scale-95 border ${
                     loopRecordingId === recording.id
-                      ? "bg-[#0b3d33] text-white shadow-[0_0_15px_rgba(20,69,47,0.4)] animate-[pulse_2s_ease-in-out_infinite]"
-                      : "bg-[#0b3d33]/10 text-[#0b3d33] hover:bg-[#0b3d33]/20"
+                      ? "border-[#041c17] bg-gradient-to-b from-[#0b3d33] to-[#072a23] text-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),_0_0_15px_rgba(11,61,51,0.5)] animate-pulse"
+                      : "border-[#0b3d33]/15 bg-white/80 text-[#0b3d33] shadow-sm hover:scale-105 hover:bg-white"
                   }`}
                 >
-                  <Sparkles className="h-3 w-3" />
+                  <Sparkles className="h-4 w-4" />
                   {loopRecordingId === recording.id ? "Stop Loop" : "Deep Loop"}
                 </button>
               </div>
 
               {aiInsights[recording.id] && (
-                <div className="mt-2 rounded-xl bg-purple-50/50 p-4 border border-purple-100">
-                  <div className="flex items-start gap-3">
-                    <div className="rounded-full bg-purple-100 p-2 text-purple-700 shrink-0">
-                      <Brain className="h-4 w-4" />
+                <div className="mt-3 rounded-2xl bg-[#E9E2D5]/70 p-5 border border-[#0b3d33]/10 shadow-inner">
+                  <div className="flex items-start gap-4">
+                    <div className="rounded-full bg-white p-2.5 text-[#0b3d33] shrink-0 shadow-sm">
+                      <Brain className="h-5 w-5" />
                     </div>
                     <div>
                       <p className="text-sm font-medium text-gray-800 leading-relaxed">{aiInsights[recording.id].message}</p>
                       <button 
                         onClick={() => onPlayRecommended && onPlayRecommended(aiInsights[recording.id].suggestedTopic)}
-                        className="mt-3 flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-bold text-purple-700 shadow-sm border border-purple-200 hover:bg-purple-50 transition"
+                        className="mt-4 flex items-center gap-2 rounded-full border border-[#041c17] bg-gradient-to-b from-[#0b3d33] to-[#072a23] px-5 py-2 text-xs font-bold text-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.25),_0_4px_8px_rgba(11,61,51,0.2)] hover:-translate-y-0.5 active:scale-95 transition-all"
                       >
-                        <Play className="h-3 w-3 fill-current" /> Play recommended {aiInsights[recording.id].suggestedTopic} session
+                        <Play className="h-3.5 w-3.5 fill-current ml-0.5 drop-shadow-md" /> Play recommended {aiInsights[recording.id].suggestedTopic} session
                       </button>
                     </div>
                   </div>

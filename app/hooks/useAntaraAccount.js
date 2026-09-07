@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { createClient } from "../lib/supabase/client";
 
-export default function useAntaraAccount() {
-  const supabase = useMemo(() => createClient(), []);
+const supabase = createClient();
 
+export default function useAntaraAccount() {
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
   const [savedProgramIds, setSavedProgramIds] = useState([]);
@@ -36,11 +36,24 @@ export default function useAntaraAccount() {
         .eq("user_id", currentUser.id),
     ]);
 
-    if (!profileResult.error) {
-      setProfile(profileResult.data);
+    let finalProfileData = profileResult.data;
+
+    if (!finalProfileData && !profileResult.error) {
+      await new Promise(resolve => setTimeout(resolve, 600));
+      const retry = await supabase.from("profiles").select("*").eq("id", currentUser.id).maybeSingle();
+      finalProfileData = retry.data;
     }
 
-    if (!savedResult.error) {
+    if (!finalProfileData) {
+      finalProfileData = {
+        id: currentUser.id,
+        username: currentUser.user_metadata?.username || currentUser.user_metadata?.name || currentUser.email?.split('@')[0] || "User",
+      };
+    }
+
+    setProfile(finalProfileData);
+
+    if (!savedResult.error && savedResult.data) {
       setSavedProgramIds(savedResult.data.map((item) => item.program_id));
     }
 
@@ -50,28 +63,39 @@ export default function useAntaraAccount() {
   }
 
   useEffect(() => {
+    let mounted = true;
+
     async function initialiseAccount() {
       const {
         data: { user: currentUser },
       } = await supabase.auth.getUser();
 
-      setUser(currentUser);
-      await loadUserData(currentUser);
-      setLoading(false);
+      if (mounted) {
+        setUser(currentUser);
+        await loadUserData(currentUser);
+        setLoading(false);
+      }
     }
 
     initialiseAccount();
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, currentUser) => {
-      setUser(currentUser);
-      await loadUserData(currentUser);
-      setLoading(false);
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      
+      if (mounted) {
+        const currentUser = session?.user || null;
+        setUser(currentUser);
+        await loadUserData(currentUser);
+        setLoading(false);
+      }
     });
 
-    return () => subscription.unsubscribe();
-  }, [supabase]);
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
+  }, []);
 
   async function saveProfile(updates) {
     if (!user) return { error: "Please sign in first." };
@@ -134,25 +158,56 @@ export default function useAntaraAccount() {
     });
   }
 
-  async function createPlaylist(name) {
+ async function createPlaylist(name) {
     if (!user) return { error: "Please sign in first." };
 
-    const newPlaylist = {
+    const newId = crypto.randomUUID();
+    
+    const playlistData = {
+      id: newId, 
       user_id: user.id,
       name: name,
       tracks: [],
     };
 
+    setCustomPlaylists((prev) => [...prev, playlistData]);
+
     const { data, error } = await supabase
       .from("custom_playlists")
-      .insert(newPlaylist)
+      .insert(playlistData)
       .select()
       .single();
 
-    if (!error && data) {
-      setCustomPlaylists((prev) => [...prev, data]);
+    if (error) {
+      console.error("Database error:", error.message);
+      setCustomPlaylists((current) => current.filter(p => p.id !== newId));
+      alert("Could not create playlist. Please try again.");
     }
+    
     return { data, error: error?.message };
+  }
+
+  async function deletePlaylist(playlistId) {
+    if (!user) return { error: "Please sign in first." };
+
+    const playlistBackup = customPlaylists.find(p => p.id === playlistId);
+    setCustomPlaylists((prev) => prev.filter((p) => p.id !== playlistId));
+
+    const { error } = await supabase
+      .from("custom_playlists")
+      .delete()
+      .eq("id", playlistId);
+
+    if (error) {
+      console.error("Database error:", error.message);
+      if (playlistBackup) {
+        setCustomPlaylists((prev) => [...prev, playlistBackup]);
+      }
+      alert("Could not delete playlist. Please try again.");
+      return { error: error.message };
+    }
+    
+    return { success: true };
   }
 
   async function addTrackToPlaylist(playlistId, track) {
@@ -210,6 +265,7 @@ export default function useAntaraAccount() {
     toggleSavedProgram,
     recordCompletedSession,
     createPlaylist,
+    deletePlaylist, 
     addTrackToPlaylist,
     signOut,
   };
