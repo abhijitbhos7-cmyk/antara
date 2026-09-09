@@ -9,7 +9,7 @@ export const topics = [
   "Spirituality",
 ];
 
-// LIVE SUPABASE STORAGE ASSETS
+
 const AMBIENCE_RAIN = "https://tpoilisvdacxgryhoujg.supabase.co/storage/v1/object/public/antara-audio/ambience/rain.mp3";
 const AMBIENCE_WAVES = "https://tpoilisvdacxgryhoujg.supabase.co/storage/v1/object/public/antara-audio/ambience/waves.mp3";
 const AMBIENCE_FOCUS = "https://tpoilisvdacxgryhoujg.supabase.co/storage/v1/object/public/antara-audio/sessions/focus.mp3";
@@ -35,7 +35,7 @@ export const programs = [
     description: "A quick breathing exercise to reset your nervous system.",
     duration: 8,
     image: "https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AA1V4HLS.img?w=700&h=400&m=4&q=54",
-    audioUrl: SESSION_FOCUS, // Wired to your live Supabase focus audio
+    audioUrl: SESSION_FOCUS, 
     ambienceUrl: AMBIENCE_RAIN,
   },
   {

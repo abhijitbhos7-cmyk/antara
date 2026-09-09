@@ -49,26 +49,26 @@ export default function AccountOverview({ user, profile, onClose }) {
   return (
     <div className="absolute inset-0 z-[500] bg-white overflow-y-auto text-gray-900 flex flex-col animate-in slide-in-from-bottom-8 duration-500">
       
-      {/* SPOTIFY-STYLE NAVBAR */}
+      
       <header className="sticky top-0 z-50 flex items-center justify-between px-6 md:px-8 py-3 bg-[#0b3d33] text-white shadow-md">
         
-        {/* Left side: Logo */}
+        
         <div className="flex items-center gap-3 cursor-pointer" onClick={onClose}>
           <img src="/antara-logo.svg" alt="Antara Logo" className="h-10 w-10 md:h-12 md:w-12 object-contain filter brightness-0 invert" />
           <span className="text-xl md:text-2xl font-extrabold tracking-tight hidden sm:block text-white">ANTARA</span>
         </div>
 
-        {/* Right side: Links & Profile */}
+       
         <div className="flex items-center gap-4 sm:gap-6">
           
-          {/* Desktop Links */}
+          
           <div className="hidden lg:flex items-center gap-8 mr-2 h-full">
             
-            {/* Premium Plans with Hover Dropdown */}
+            
             <div className="relative group py-4">
               <a href="#" className="text-[15px] font-bold transition-colors text-white hover:text-green-200">Premium plans</a>
               
-              {/* Dark Dropdown Box for Plans */}
+              
               <div className="absolute left-1/2 -translate-x-1/2 top-full pt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                 <div className="w-[340px] bg-[#282828] rounded-md shadow-2xl p-2 border border-[#3e3e3e]">
                   
@@ -95,7 +95,6 @@ export default function AccountOverview({ user, profile, onClose }) {
             <a href="#" className="text-[15px] font-bold hover:scale-105 transition-transform border-r border-white/30 pr-8 text-white">Download</a>
           </div>
 
-          {/* Profile Button with Hover Dropdown */}
           <div className="hidden md:block relative group py-2">
             <button className="flex items-center gap-2 hover:bg-white/10 py-1.5 px-2 pr-3 rounded-full transition-colors cursor-pointer text-white">
               <div className="h-8 w-8 rounded-full bg-white/20 flex items-center justify-center overflow-hidden shrink-0 group-hover:bg-white/30 transition-colors">
@@ -109,11 +108,10 @@ export default function AccountOverview({ user, profile, onClose }) {
               <ChevronDown className="h-4 w-4 ml-1 transition-transform duration-300 group-hover:rotate-180" />
             </button>
 
-            {/* White Dropdown Box for Profile */}
+            
             <div className="absolute right-0 top-full pt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
               <div className="w-44 bg-white rounded-md shadow-[0_16px_40px_rgba(0,0,0,0.3)] relative mt-2">
                 
-                {/* The Little Upward Triangle */}
                 <div className="absolute -top-2 right-6 w-4 h-4 bg-white rotate-45 rounded-tl-sm shadow-[-4px_-4px_8px_rgba(0,0,0,0.05)] z-0"></div>
                 
                 <div className="relative z-10 flex flex-col py-1 bg-white rounded-md overflow-hidden">
@@ -124,7 +122,6 @@ export default function AccountOverview({ user, profile, onClose }) {
             </div>
           </div>
 
-          {/* Close Button */}
           <button 
             onClick={onClose} 
             className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-full transition-all active:scale-95 ml-2 sm:ml-0"

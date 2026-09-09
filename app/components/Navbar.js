@@ -50,12 +50,10 @@ export default function Navbar({
   return (
     <nav className="flex items-center justify-between bg-transparent px-6 py-3 md:px-8 gap-4 w-full">
       
-      {/* MOBILE ONLY: Logo */}
       <div className="flex items-center gap-2 md:hidden shrink-0">
         <img src="/antara-logo.svg" alt="Antara Logo" className="h-8 w-8 object-contain" />
       </div>
 
-      {/* LEFT SIDE: Search Bar Only */}
       <div className="flex items-center gap-3 w-full max-w-[420px] flex-1 md:flex-none md:ml-0">
         <div className="relative w-full">
           <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500"/>
@@ -69,10 +67,8 @@ export default function Navbar({
         </div>
       </div>
 
-      {/* RIGHT SIDE: Spotify Buttons & Profile */}
       <div className="flex items-center gap-2 shrink-0 ml-auto">
         
-        {/* New Spotify-Style Action Buttons (Desktop Only) */}
         <div className="hidden lg:flex items-center gap-2 mr-2">
           
           <button 
@@ -99,7 +95,7 @@ export default function Navbar({
           
         </div>
 
-        {/* User Profile Bubble */}
+        
         {user ? (
           <div className="relative flex items-center" ref={desktopMenuRef}>
             <button 

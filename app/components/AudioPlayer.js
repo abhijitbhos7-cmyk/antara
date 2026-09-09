@@ -32,7 +32,6 @@ export default function AudioPlayer({ program, onClose, onComplete }) {
   const [selectedFreq, setSelectedFreq] = useState(0);
   const [selectedAmbience, setSelectedAmbience] = useState("");
 
-  // New Media Controls State
   const [isShuffled, setIsShuffled] = useState(false);
   const [isRepeat, setIsRepeat] = useState(false);
 
@@ -175,10 +174,8 @@ export default function AudioPlayer({ program, onClose, onComplete }) {
         </div>
       </div>
 
-      {/* 2. CENTER: Full Media Console & Progress Bar */}
       <div className="flex-1 max-w-[722px] mx-auto flex flex-col justify-center items-center px-4 mt-1">
         
-        {/* Media Controls (Symmetrical Layout) */}
         <div className="flex items-center gap-5 md:gap-7 mb-1.5">
           <button 
             onClick={() => setIsShuffled(!isShuffled)} 
@@ -212,7 +209,6 @@ export default function AudioPlayer({ program, onClose, onComplete }) {
           </button>
         </div>
         
-        {/* Progress Bar (Using Antara Beige on Hover) */}
         <div className="flex items-center gap-2 w-full max-w-[600px] text-[11px] font-medium text-white/50">
           <span className="w-10 text-right">{formatTime(currentTime)}</span>
           <div className="relative flex-1 h-1 flex items-center group">
@@ -240,7 +236,6 @@ export default function AudioPlayer({ program, onClose, onComplete }) {
         </div>
       </div>
 
-      {/* 3. RIGHT: Custom Antara Mixers & Close Button */}
       <div className="flex items-center justify-end gap-3 w-[30%] min-w-[280px]">
         
         <div className="bg-black/20 hover:bg-black/40 transition-colors rounded-xl p-2 flex flex-col items-center justify-between w-[64px] border border-white/5">

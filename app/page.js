@@ -38,16 +38,15 @@ export default function Dashboard() {
   const [showCreatePlaylist, setShowCreatePlaylist] = useState(false);
   const [newPlaylistName, setNewPlaylistName] = useState("");
   
-  // FILTER PILL STATE
   const [activeFilter, setActiveFilter] = useState("All");
   const filterCategories = ["All", "Focus", "Sleep", "Relax", "Guided", "Frequencies"];
 
-  // FULL SCREEN VIEW STATES
+  
   const [showAccountView, setShowAccountView] = useState(false);
   const [showProfileView, setShowProfileView] = useState(false);
   const [showSettingsView, setShowSettingsView] = useState(false);
 
-  // LIBRARY DROPDOWN STATE
+  
   const [isLibraryExpanded, setIsLibraryExpanded] = useState(false);
 
   const { user, profile, recordCompletedSession, signOut, customPlaylists, createPlaylist, deletePlaylist } = useAntaraAccount();
@@ -67,7 +66,7 @@ export default function Dashboard() {
     setIsLibraryExpanded(true);
   }
 
-  // DYNAMIC FILTER LOGIC
+  
   const visiblePrograms = useMemo(() => {
     let filtered = programs.filter((program) => `${program.title} ${program.topic}`.toLowerCase().includes(query.toLowerCase()));
     
@@ -127,18 +126,18 @@ export default function Dashboard() {
   return (
     <div className="flex h-screen w-full bg-[#F0EDE6] overflow-hidden relative font-sans text-gray-900 selection:bg-[#0b3d33] selection:text-white">
       
-      {/* FULL SCREEN VIEWS */}
+     
       {showAccountView && <AccountOverview user={user} profile={profile} onClose={() => setShowAccountView(false)} />}
       
-      {/* NOTE: SettingsView and ProfileView are now rendered INSIDE the main viewport below, so they are removed from here */}
+     
 
-      {/* STRUCTURAL WRAPPER */}
+    
       <div 
         className="flex flex-1 w-full h-full p-2 gap-2 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden"
         style={{ paddingBottom: playerProgram ? '104px' : '8px' }}
       >
         
-        {/* NEW DUAL-BUBBLE SIDEBAR */}
+       
         <div className="w-[280px] shrink-0 flex-col gap-2 hidden md:flex z-20 h-full">
           
           <div className="bg-[#0b3d33] rounded-2xl p-6 flex flex-col gap-6 shadow-md relative overflow-hidden shrink-0 border border-black/5">
@@ -216,10 +215,10 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* MAIN STAGE VIEWPORT */}
+      
         <main className="flex-1 flex flex-col relative overflow-hidden bg-white rounded-2xl shadow-sm z-10 transition-all duration-500 border border-gray-100">
           
-          {/* STATIC NAVBAR WRAPPER */}
+        
           <div className="sticky top-0 z-20 bg-white/95 backdrop-blur-md border-b border-gray-50/50">
             <Navbar 
               query={query} 
@@ -232,7 +231,7 @@ export default function Dashboard() {
               onOpenProfile={() => { resetViews(); setShowProfileView(true); }}
               onOpenSettings={() => { resetViews(); setShowSettingsView(true); }}
             />
-            {/* ONLY SHOW PILLS IF ON HOME AND NOT VIEWING PROFILE OR SETTINGS */}
+          
             {activeTab === "Home" && !showProfileView && !showSettingsView && (
               <div className="px-6 md:px-12 pt-2 pb-3 flex items-center gap-3 overflow-x-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                 {filterCategories.map(category => (
@@ -254,11 +253,11 @@ export default function Dashboard() {
           
           <div className="flex-1 overflow-y-auto pb-32 md:pb-12 scroll-smooth">
             
-            {/* Render Settings View First */}
+          
             {showSettingsView ? (
               <SettingsView />
               
-            /* Then Render Profile View */  
+           
             ) : showProfileView ? (
               <ProfileView 
                 user={user} 
@@ -267,7 +266,7 @@ export default function Dashboard() {
                 onOpenSettings={() => setShowSettingsView(true)} 
               />
               
-            /* Then Render Playlist Details */  
+           
             ) : viewingPlaylist ? (
               <div className="px-6 md:px-12 pt-8 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out">
                 <PlaylistDetail 
@@ -285,7 +284,7 @@ export default function Dashboard() {
                 />
               </div>
               
-            /* Otherwise, render the main dashboard */
+          
             ) : (
               <div className="animate-in fade-in duration-700 ease-out">
                 

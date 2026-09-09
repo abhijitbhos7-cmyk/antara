@@ -10,7 +10,7 @@ export default function SettingsView() {
   return (
     <div className="w-full flex flex-col animate-in fade-in duration-500 pb-12 bg-white">
       
-      {/* HEADER AREA */}
+      
       <div className="px-6 md:px-10 pt-10 pb-6 flex items-center justify-between">
         <h1 className="text-3xl font-black text-gray-900 tracking-tight">Settings</h1>
         <div className="relative text-gray-400 hover:text-gray-900 transition-colors cursor-pointer">
@@ -20,7 +20,7 @@ export default function SettingsView() {
 
       <div className="px-6 md:px-10 max-w-3xl space-y-12">
         
-        {/* Account Section */}
+        
         <section>
           <h2 className="text-base font-black text-gray-900 mb-4 tracking-tight">Account</h2>
           <div className="flex items-center justify-between py-2">
@@ -31,7 +31,7 @@ export default function SettingsView() {
           </div>
         </section>
 
-        {/* Language Section */}
+      
         <section>
           <h2 className="text-base font-black text-gray-900 mb-4 tracking-tight">Language</h2>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between py-2 gap-4">
@@ -52,7 +52,6 @@ export default function SettingsView() {
           </div>
         </section>
 
-        {/* Audio Quality Section */}
         <section>
           <h2 className="text-base font-black text-gray-900 mb-4 tracking-tight">Audio quality</h2>
           
@@ -84,7 +83,6 @@ export default function SettingsView() {
           </div>
         </section>
 
-        {/* Your Library Section */}
         <section>
           <h2 className="text-base font-black text-gray-900 mb-4 tracking-tight">Your Library</h2>
           

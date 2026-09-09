@@ -4,31 +4,27 @@ import { X, Smartphone, ArrowLeft } from "lucide-react";
 import useAntaraAccount from "../hooks/useAntaraAccount";
 
 export default function AuthModal({ onClose }) {
-  const [authMode, setAuthMode] = useState("email"); // "email", "phone", or "otp"
+  const [authMode, setAuthMode] = useState("email"); 
   const [isSignUp, setIsSignUp] = useState(false);
-  const [signupStep, setSignupStep] = useState(1); // Step 1: Email, Step 2: Profile Details
+  const [signupStep, setSignupStep] = useState(1); 
   
-  // Form States
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
   
-  // New Profile States for Step 2
   const [name, setName] = useState("");
   const [dobYear, setDobYear] = useState("");
   const [dobMonth, setDobMonth] = useState("");
   const [dobDay, setDobDay] = useState("");
   const [gender, setGender] = useState("");
   
-  // Status States
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
   const { signIn, signUp, signInWithGoogle, sendPhoneOtp, verifyPhoneOtp, saveProfile } = useAntaraAccount();
 
-  // --- HANDLERS ---
   
   async function handleEmailSubmit(e) {
     e.preventDefault();
@@ -41,7 +37,6 @@ export default function AuthModal({ onClose }) {
     if (result?.error) {
       setError(result.error);
     } else if (isSignUp) {
-      // If sign up is successful, save the extra profile data
       await saveProfile({ 
         username: name,
         gender: gender,
@@ -86,10 +81,8 @@ export default function AuthModal({ onClose }) {
     setLoading(false);
   }
 
-  // --- RENDER HELPERS ---
 
   const renderEmailForm = () => {
-    // 2-Step Sign Up Flow (Spotify Detailed Profile Style)
     if (isSignUp) {
       if (signupStep === 1) {
         return (
@@ -111,7 +104,6 @@ export default function AuthModal({ onClose }) {
         return (
           <form onSubmit={handleEmailSubmit} className="w-full max-w-[400px] mx-auto animate-in slide-in-from-right-4 duration-300 pb-8">
             
-            {/* Progress Bar & Header */}
             <div className="w-full bg-gray-200 h-1 mb-6 rounded-full overflow-hidden">
                <div className="bg-[#0b3d33] h-full w-1/2 rounded-full"></div>
             </div>
@@ -120,7 +112,6 @@ export default function AuthModal({ onClose }) {
               <h2 className="text-xl font-bold text-gray-900">Finish creating your account</h2>
             </div>
 
-            {/* Email (Read Only from Step 1) */}
             <div className="flex flex-col gap-1.5 mb-5">
               <label className="text-sm font-bold text-gray-900">Email address</label>
               <input 
@@ -129,7 +120,6 @@ export default function AuthModal({ onClose }) {
               />
             </div>
 
-            {/* Password */}
             <div className="flex flex-col gap-1.5 mb-5">
               <label className="text-sm font-bold text-gray-900">Create a password</label>
               <input 
@@ -139,7 +129,6 @@ export default function AuthModal({ onClose }) {
               />
             </div>
 
-            {/* Name */}
             <div className="flex flex-col gap-1 mb-5">
               <label className="text-sm font-bold text-gray-900">Name</label>
               <p className="text-xs text-gray-500 mb-1 font-medium">This name will appear on your profile</p>
@@ -150,7 +139,6 @@ export default function AuthModal({ onClose }) {
               />
             </div>
 
-            {/* Date of Birth */}
             <div className="flex flex-col gap-1 mb-5">
               <label className="text-sm font-bold text-gray-900">Date of birth</label>
               <p className="text-xs text-gray-500 mb-1 font-medium">Why do we need your date of birth? <span className="underline cursor-pointer hover:text-gray-800">Learn more.</span></p>
@@ -184,7 +172,6 @@ export default function AuthModal({ onClose }) {
               </div>
             </div>
 
-            {/* Gender Radios */}
             <div className="flex flex-col gap-1 mb-8">
               <label className="text-sm font-bold text-gray-900">Gender</label>
               <p className="text-xs text-gray-500 mb-3 font-medium">We use your gender to help personalise our content recommendations.</p>
@@ -209,7 +196,6 @@ export default function AuthModal({ onClose }) {
       }
     }
 
-    // Standard Log In Flow
     return (
       <form onSubmit={handleEmailSubmit} className="w-full max-w-[324px] mx-auto animate-in slide-in-from-right-4 duration-300">
         <div className="flex flex-col gap-1.5 mb-4">
@@ -284,12 +270,10 @@ export default function AuthModal({ onClose }) {
   return (
     <div className="fixed inset-0 z-[3000] bg-[#F8F5F0] overflow-y-auto flex flex-col items-center animate-in fade-in duration-300">
       
-      {/* Top Right Close Button */}
       <button onClick={onClose} className="absolute top-6 right-6 p-3 text-gray-500 hover:text-gray-900 hover:bg-black/5 rounded-full transition-all active:scale-95 z-50">
         <X className="h-7 w-7" />
       </button>
 
-      {/* Top Left Back Button */}
       {showBackButton && (
         <button onClick={handleBack} className="absolute top-6 left-6 p-3 text-gray-500 hover:text-gray-900 hover:bg-black/5 rounded-full transition-all active:scale-95 z-50">
           <ArrowLeft className="h-7 w-7" />
@@ -298,7 +282,6 @@ export default function AuthModal({ onClose }) {
 
       <div className="w-full max-w-[734px] px-6 py-16 sm:py-24 flex flex-col items-center">
         
-        {/* Only show logo and big title if NOT on detailed signup step */}
         {(!isSignUp || signupStep === 1) && (
           <>
             <div className="flex justify-center mb-8">
@@ -320,7 +303,6 @@ export default function AuthModal({ onClose }) {
         {authMode === "phone" && renderPhoneForm()}
         {authMode === "otp" && renderOtpForm()}
 
-        {/* Hide Social Buttons and Footer if they are on Step 2 of Email Signup */}
         {authMode === "email" && (!isSignUp || (isSignUp && signupStep === 1)) && (
           <div className="w-full max-w-[324px] mx-auto animate-in fade-in duration-500">
             <div className="flex items-center my-8">

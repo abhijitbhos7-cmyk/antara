@@ -253,7 +253,7 @@ export default function useAntaraAccount() {
     await supabase.auth.signOut();
   }
 
-  // Add these inside your useAntaraAccount hook
+  
   
   const signInWithGoogle = async () => {
     const { data, error } = await supabase.auth.signInWithOAuth({

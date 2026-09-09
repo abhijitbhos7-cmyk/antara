@@ -2,7 +2,7 @@ import {
   ArrowLeft, Bookmark, Clock, MoreHorizontal, Play, 
   Heart as LucideHeart, Trash2, Music, UserPlus, 
   Search, List, LayoutList, Pencil, Share2, Plus, X,
-  Shuffle, ArrowDownCircle // Added Spotify album icons
+  Shuffle, ArrowDownCircle 
 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 
@@ -69,7 +69,7 @@ export default function PlaylistDetail({ playlist, onBack, onPlay, isSaved, onTo
     }
   };
 
-  // Dynamically generate a full "Album" of 8 tracks based on the session topic
+  
   const generatedTracks = [
     { id: `${playlist.id}-1`, title: `Introduction to ${playlist.topic}`, artist: "Antara Wellness", duration: "2:15", album: playlist.title },
     { id: `${playlist.id}-2`, title: playlist.title, artist: "Antara Wellness", duration: `${playlist.duration}:00`, album: playlist.title },
@@ -84,16 +84,12 @@ export default function PlaylistDetail({ playlist, onBack, onPlay, isSaved, onTo
   const tracksToRender = playlist.isLikedSongs ? playlist.tracks : (playlist.isCustom ? (playlist.tracks || []) : generatedTracks);
 
   return (
-    // Added scrollbar hiding classes to forcefully kill unwanted bars
     <div className="animate-in fade-in duration-500 w-full min-h-full bg-[#F8F5F0] relative pb-24 -mt-8 overflow-x-hidden [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
       
-      {/* SEAMLESS BACKGROUND GRADIENT (Antara Green Theme) */}
       <div className="absolute top-0 left-0 w-full h-[400px] bg-gradient-to-b from-[#0b3d33]/15 to-[#F8F5F0] pointer-events-none z-0"></div>
       
-      {/* HEADER SECTION (Spotify Typography & Layout) */}
       <div className="relative z-10 flex flex-col md:flex-row items-end gap-6 md:gap-8 px-6 md:px-8 pt-16 pb-6">
         
-        {/* Back Button */}
         <button 
           onClick={onBack} 
           className="absolute top-4 left-6 flex h-9 w-9 items-center justify-center rounded-full bg-black/5 text-gray-900 transition-all hover:bg-black/10 hover:scale-105 active:scale-95"
@@ -101,7 +97,6 @@ export default function PlaylistDetail({ playlist, onBack, onPlay, isSaved, onTo
           <ArrowLeft className="h-5 w-5" />
         </button>
 
-        {/* Cover Art */}
         {playlist.isLikedSongs ? (
           <div className="h-48 w-48 md:h-[232px] md:w-[232px] rounded-lg flex items-center justify-center bg-gradient-to-br from-[#450af5] to-[#c4efd9] shadow-[0_12px_40px_rgba(0,0,0,0.15)] shrink-0 mt-8">
              <LucideHeart className="h-20 w-20 md:h-24 md:w-24 text-white drop-shadow-md" fill="currentColor" />
@@ -126,13 +121,11 @@ export default function PlaylistDetail({ playlist, onBack, onPlay, isSaved, onTo
           </div>
         )}
         
-        {/* Playlist Metadata */}
         <div className="flex flex-col w-full text-gray-900 pb-2 overflow-hidden">
           <p className="text-sm font-bold text-gray-800 mb-1">
             {playlist.isCustom ? 'Public Playlist' : playlist.isLikedSongs ? 'Playlist' : 'Album'}
           </p>
           
-          {/* FIXED: Removed truncate, added break-words and line-clamp so long titles wrap instead of breaking the box */}
           <h1 
             onClick={playlist.isCustom ? openEditModal : undefined}
             className={`text-5xl md:text-6xl lg:text-7xl xl:text-[80px] font-black tracking-tighter leading-[1.05] pb-3 break-words text-wrap line-clamp-2 drop-shadow-sm ${playlist.isCustom ? 'cursor-pointer hover:text-[#0b3d33]' : ''}`}
@@ -166,7 +159,6 @@ export default function PlaylistDetail({ playlist, onBack, onPlay, isSaved, onTo
         </div>
       </div>
 
-      {/* ACTION BAR (Spotify Album Layout: Play, Shuffle, Plus, Download, More) */}
       <div className="relative z-20 px-6 md:px-8 py-4 flex items-center justify-between" ref={menuRef}>
         <div className="flex items-center gap-4 md:gap-6">
           <button 
@@ -244,7 +236,6 @@ export default function PlaylistDetail({ playlist, onBack, onPlay, isSaved, onTo
           </div>
         </div>
 
-        {/* View Toggle (List) */}
         <div className="hidden md:flex items-center">
           <button className="flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-gray-800 transition-colors">
             List <List className="h-5 w-5" />
@@ -252,7 +243,6 @@ export default function PlaylistDetail({ playlist, onBack, onPlay, isSaved, onTo
         </div>
       </div>
 
-      {/* EDIT PILLS (Add, Name & Details - Matches Spotify Custom Playlist exactly) */}
       {playlist.isCustom && (
         <div className="px-6 md:px-8 pb-8 flex items-center gap-3 relative z-20">
           <button onClick={focusSearch} className="flex items-center gap-2 rounded-full border border-gray-300 bg-transparent px-4 py-1.5 text-sm font-bold text-gray-700 hover:border-gray-500 hover:text-gray-900 transition-all">
@@ -264,7 +254,6 @@ export default function PlaylistDetail({ playlist, onBack, onPlay, isSaved, onTo
         </div>
       )}
 
-      {/* SEARCH SECTION (Let's find something...) */}
       {playlist.isCustom && (
         <div className="relative z-10 border-t border-gray-200/60 pt-6 px-6 md:px-8 mb-8">
           <div className="flex items-center justify-between mb-4">
@@ -283,7 +272,6 @@ export default function PlaylistDetail({ playlist, onBack, onPlay, isSaved, onTo
         </div>
       )}
 
-      {/* TRACKLIST TABLE HEADER */}
       <div className="relative z-10 grid grid-cols-[16px_1fr_auto] md:grid-cols-[16px_minmax(0,2fr)_minmax(0,1.5fr)_auto] gap-4 items-center px-6 md:px-12 py-2 border-b border-gray-200/60 mb-2 text-xs font-bold text-gray-500 uppercase tracking-widest">
         <div className="text-right">#</div>
         <div>Title</div>
@@ -291,7 +279,6 @@ export default function PlaylistDetail({ playlist, onBack, onPlay, isSaved, onTo
         <div className="flex justify-end pr-8"><Clock className="h-4 w-4" /></div>
       </div>
 
-      {/* TRACKLIST ROWS */}
       <div className="relative z-10 flex flex-col px-4 md:px-8">
         {tracksToRender.map((track, index) => {
           const isTrackSaved = savedTracks && savedTracks.some(t => t.id === track.id);
@@ -307,7 +294,7 @@ export default function PlaylistDetail({ playlist, onBack, onPlay, isSaved, onTo
               <div className="hidden w-full justify-end text-gray-900 group-hover:flex"><Play className="h-4 w-4 fill-current mr-0.5" /></div>
               
               <div className="flex items-center gap-3 min-w-0 pr-4">
-                {/* Omit thumbnails for standard generated tracks if we want a pure album look, but keeping it as it provides a premium feel */}
+               
                 {!playlist.isLikedSongs && playlist.isCustom ? (
                   <img src={trackImage} alt="" className="h-10 w-10 rounded shadow-sm shrink-0 object-cover" />
                 ) : null}
@@ -339,7 +326,6 @@ export default function PlaylistDetail({ playlist, onBack, onPlay, isSaved, onTo
         })}
       </div>
 
-      {/* EDIT MODAL */}
       {isEditModalOpen && (
         <div className="fixed inset-0 z-[600] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="w-full max-w-[520px] rounded-xl bg-white p-6 shadow-2xl animate-in zoom-in-95 duration-200">
