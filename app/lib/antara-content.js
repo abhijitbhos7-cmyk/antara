@@ -1,4 +1,3 @@
-
 export const topics = [
   "All",
   "Focus",
@@ -10,6 +9,14 @@ export const topics = [
   "Spirituality",
 ];
 
+// LIVE SUPABASE STORAGE ASSETS
+const AMBIENCE_RAIN = "https://tpoilisvdacxgryhoujg.supabase.co/storage/v1/object/public/antara-audio/ambience/rain.mp3";
+const AMBIENCE_WAVES = "https://tpoilisvdacxgryhoujg.supabase.co/storage/v1/object/public/antara-audio/ambience/waves.mp3";
+const AMBIENCE_FOCUS = "https://tpoilisvdacxgryhoujg.supabase.co/storage/v1/object/public/antara-audio/sessions/focus.mp3";
+
+const SESSION_DEEP_FOCUS = "https://tpoilisvdacxgryhoujg.supabase.co/storage/v1/object/public/antara-audio/sessions/deep-focus.mp3";
+const SESSION_FOCUS = "https://tpoilisvdacxgryhoujg.supabase.co/storage/v1/object/public/antara-audio/sessions/focus.mp3";
+
 export const programs = [
   {
     id: "p1",
@@ -18,8 +25,8 @@ export const programs = [
     description: "Settle distractions and return to what matters.",
     duration: 10,
     image: "https://thumbs.dreamstime.com/b/person-deep-meditation-surrounded-psychic-waves-emanating-their-mind-life-creation-chakras-focus-point-302603396.jpg",
-    audioUrl: "/programs/deep-focus.mp3",
-    ambienceUrl: "/audio/ambience/focus.mp3",
+    audioUrl: SESSION_DEEP_FOCUS,
+    ambienceUrl: AMBIENCE_FOCUS,
   },
   {
     id: "p2",
@@ -28,8 +35,8 @@ export const programs = [
     description: "A quick breathing exercise to reset your nervous system.",
     duration: 8,
     image: "https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AA1V4HLS.img?w=700&h=400&m=4&q=54",
-    audioUrl: "/programs/calm-mind-reset.mp3",
-    ambienceUrl: "/audio/ambience/rain.mp3",
+    audioUrl: SESSION_FOCUS, // Wired to your live Supabase focus audio
+    ambienceUrl: AMBIENCE_RAIN,
   },
   {
     id: "p3",
@@ -49,7 +56,7 @@ export const programs = [
     duration: 20,
     image: "https://images.indianexpress.com/2025/10/sleep_0caaca.png",
     audioUrl: "/programs/sleep-softly.mp3",
-    ambienceUrl: "/audio/ambience/waves.mp3",
+    ambienceUrl: AMBIENCE_WAVES,
   },
   {
     id: "p5",
@@ -79,7 +86,7 @@ export const programs = [
     duration: 25,
     image: "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=800&auto=format&fit=crop&q=60",
     audioUrl: "/programs/spiritual-awakening.mp3",
-    ambienceUrl: "/audio/ambience/focus.mp3",
+    ambienceUrl: AMBIENCE_FOCUS,
   },
   {
     id: "p8",
@@ -89,7 +96,7 @@ export const programs = [
     duration: 10,
     image: "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?w=800&auto=format&fit=crop&q=60",
     audioUrl: "/programs/chants-of-peace.mp3",
-    ambienceUrl: "/audio/ambience/rain.mp3",
+    ambienceUrl: AMBIENCE_RAIN,
   },
   {
     id: "p9",
@@ -99,7 +106,7 @@ export const programs = [
     duration: 18,
     image: "https://images.unsplash.com/photo-1470240731273-7821a6eeb6bd?w=800&auto=format&fit=crop&q=60",
     audioUrl: "/programs/inner-divinity.mp3",
-    ambienceUrl: "/audio/ambience/waves.mp3",
+    ambienceUrl: AMBIENCE_WAVES,
   },
   {
     id: "p10",
@@ -139,7 +146,7 @@ export const programs = [
     duration: 30,
     image: "https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?w=800&auto=format&fit=crop&q=60",
     audioUrl: "/programs/cosmic-connection.mp3",
-    ambienceUrl: "/audio/ambience/focus.mp3",
+    ambienceUrl: AMBIENCE_FOCUS,
   },
   {
     id: "p14",
@@ -159,7 +166,7 @@ export const programs = [
     duration: 10,
     image: "https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?w=800&auto=format&fit=crop&q=60",
     audioUrl: "/programs/zen-mind.mp3",
-    ambienceUrl: "/audio/ambience/rain.mp3",
+    ambienceUrl: AMBIENCE_RAIN,
   },
   {
     id: "p16",
@@ -169,7 +176,7 @@ export const programs = [
     duration: 22,
     image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&auto=format&fit=crop&q=60",
     audioUrl: "/programs/deep-healing.mp3",
-    ambienceUrl: "/audio/ambience/waves.mp3",
+    ambienceUrl: AMBIENCE_WAVES,
   },
   {
     id: "p17",
@@ -179,7 +186,7 @@ export const programs = [
     duration: 8,
     image: "https://images.unsplash.com/photo-1473448912268-2022ce9509d8?w=800&auto=format&fit=crop&q=60",
     audioUrl: "/programs/unshakeable.mp3",
-    ambienceUrl: "/audio/ambience/focus.mp3",
+    ambienceUrl: AMBIENCE_FOCUS,
   },
   {
     id: "p18",
@@ -189,7 +196,7 @@ export const programs = [
     duration: 45,
     image: "https://images.unsplash.com/photo-1523712999610-f77fbcfc3843?w=800&auto=format&fit=crop&q=60",
     audioUrl: "/programs/flow-state.mp3",
-    ambienceUrl: "/audio/ambience/rain.mp3",
+    ambienceUrl: AMBIENCE_RAIN,
   },
   {
     id: "p19",
@@ -199,7 +206,7 @@ export const programs = [
     duration: 35,
     image: "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?w=800&auto=format&fit=crop&q=60",
     audioUrl: "/programs/midnight-rest.mp3",
-    ambienceUrl: "/audio/ambience/waves.mp3",
+    ambienceUrl: AMBIENCE_WAVES,
   },
   {
     id: "p20",
@@ -229,7 +236,7 @@ export const programs = [
     duration: 5,
     image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&auto=format&fit=crop&q=60",
     audioUrl: "/programs/ocean-breath.mp3",
-    ambienceUrl: "/audio/ambience/waves.mp3",
+    ambienceUrl: AMBIENCE_WAVES,
   },
   {
     id: "p23",
@@ -239,7 +246,7 @@ export const programs = [
     duration: 10,
     image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&auto=format&fit=crop&q=60",
     audioUrl: "/programs/radiate-light.mp3",
-    ambienceUrl: "/audio/ambience/focus.mp3",
+    ambienceUrl: AMBIENCE_FOCUS,
   },
   {
     id: "p24",
@@ -259,6 +266,6 @@ export const programs = [
     duration: 60,
     image: "https://images.unsplash.com/photo-1538370965046-79c0d6907d47?w=800&auto=format&fit=crop&q=60",
     audioUrl: "/programs/astral-sleep.mp3",
-    ambienceUrl: "/audio/ambience/rain.mp3",
+    ambienceUrl: AMBIENCE_RAIN,
   }
 ];

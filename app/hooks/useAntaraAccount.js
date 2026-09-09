@@ -253,6 +253,34 @@ export default function useAntaraAccount() {
     await supabase.auth.signOut();
   }
 
+  // Add these inside your useAntaraAccount hook
+  
+  const signInWithGoogle = async () => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}`,
+      },
+    });
+    return { data, error };
+  };
+
+  const sendPhoneOtp = async (phone) => {
+    const { data, error } = await supabase.auth.signInWithOtp({
+      phone: phone,
+    });
+    return { data, error };
+  };
+
+  const verifyPhoneOtp = async (phone, token) => {
+    const { data, error } = await supabase.auth.verifyOtp({
+      phone,
+      token,
+      type: 'sms',
+    });
+    return { data, error };
+  };
+
   return {
     user,
     profile,
@@ -268,5 +296,6 @@ export default function useAntaraAccount() {
     deletePlaylist, 
     addTrackToPlaylist,
     signOut,
+    signInWithGoogle, sendPhoneOtp, verifyPhoneOtp,
   };
 }

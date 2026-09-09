@@ -1,4 +1,4 @@
-import { X, Search, ChevronRight, Edit2, Clock, MapPin, CreditCard, Shield, LayoutList, Lock, LogIn, MonitorSpeaker, Trash2, LogOut as LogOutIcon, Sliders, HelpCircle, Bookmark } from "lucide-react";
+import { X, Search, ChevronRight, Edit2, Clock, MapPin, CreditCard, Shield, LayoutList, Lock, LogIn, MonitorSpeaker, Trash2, LogOut as LogOutIcon, Sliders, HelpCircle, Bookmark, User, ChevronDown } from "lucide-react";
 
 export default function AccountOverview({ user, profile, onClose }) {
   const email = user?.email || "No email provided";
@@ -49,22 +49,92 @@ export default function AccountOverview({ user, profile, onClose }) {
   return (
     <div className="absolute inset-0 z-[500] bg-white overflow-y-auto text-gray-900 flex flex-col animate-in slide-in-from-bottom-8 duration-500">
       
-     
-      <div className="sticky top-0 z-50 flex items-center justify-between px-6 md:px-8 py-4 bg-[#0b3d33] shadow-md">
-        <div className="flex items-center gap-3">
-          <img src="/antara-logo.svg" alt="Antara Logo" className="h-12 w-12 object-contain filter brightness-0 invert" />
-          <span className="text-2xl font-extrabold tracking-tight text-white">ANTARA</span>
+      {/* SPOTIFY-STYLE NAVBAR */}
+      <header className="sticky top-0 z-50 flex items-center justify-between px-6 md:px-8 py-3 bg-[#0b3d33] text-white shadow-md">
+        
+        {/* Left side: Logo */}
+        <div className="flex items-center gap-3 cursor-pointer" onClick={onClose}>
+          <img src="/antara-logo.svg" alt="Antara Logo" className="h-10 w-10 md:h-12 md:w-12 object-contain filter brightness-0 invert" />
+          <span className="text-xl md:text-2xl font-extrabold tracking-tight hidden sm:block text-white">ANTARA</span>
         </div>
-        <button 
-          onClick={onClose} 
-          className="p-2 rounded-full text-white/70 hover:bg-white/10 hover:text-white transition-colors active:scale-90"
-        >
-          <X className="h-6 w-6" />
-        </button>
-      </div>
+
+        {/* Right side: Links & Profile */}
+        <div className="flex items-center gap-4 sm:gap-6">
+          
+          {/* Desktop Links */}
+          <div className="hidden lg:flex items-center gap-8 mr-2 h-full">
+            
+            {/* Premium Plans with Hover Dropdown */}
+            <div className="relative group py-4">
+              <a href="#" className="text-[15px] font-bold transition-colors text-white hover:text-green-200">Premium plans</a>
+              
+              {/* Dark Dropdown Box for Plans */}
+              <div className="absolute left-1/2 -translate-x-1/2 top-full pt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className="w-[340px] bg-[#282828] rounded-md shadow-2xl p-2 border border-[#3e3e3e]">
+                  
+                  <div className="p-4 hover:bg-white/10 rounded-md cursor-pointer transition-colors">
+                    <h4 className="text-white font-bold mb-1 text-base">Premium Standard</h4>
+                    <p className="text-gray-400 text-sm">Your music. Your way. Everywhere - 1 account.</p>
+                  </div>
+                  
+                  <div className="p-4 hover:bg-white/10 rounded-md cursor-pointer transition-colors">
+                    <h4 className="text-white font-bold mb-1 text-base">Premium Platinum</h4>
+                    <p className="text-gray-400 text-sm">Listen on a whole new level - Up to 3 accounts.</p>
+                  </div>
+                  
+                  <div className="p-4 hover:bg-white/10 rounded-md cursor-pointer transition-colors">
+                    <h4 className="text-white font-bold mb-1 text-base">Premium Student</h4>
+                    <p className="text-gray-400 text-sm">1 account - Discount for eligible students.</p>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+            <a href="#" className="text-[15px] font-bold hover:scale-105 transition-transform text-white">Support</a>
+            <a href="#" className="text-[15px] font-bold hover:scale-105 transition-transform border-r border-white/30 pr-8 text-white">Download</a>
+          </div>
+
+          {/* Profile Button with Hover Dropdown */}
+          <div className="hidden md:block relative group py-2">
+            <button className="flex items-center gap-2 hover:bg-white/10 py-1.5 px-2 pr-3 rounded-full transition-colors cursor-pointer text-white">
+              <div className="h-8 w-8 rounded-full bg-white/20 flex items-center justify-center overflow-hidden shrink-0 group-hover:bg-white/30 transition-colors">
+                {profile?.avatar_url ? (
+                  <img src={profile.avatar_url} alt="Profile" className="h-full w-full object-cover" />
+                ) : (
+                  <User className="h-5 w-5 text-white" />
+                )}
+              </div>
+              <span className="font-bold text-[15px]">Profile</span>
+              <ChevronDown className="h-4 w-4 ml-1 transition-transform duration-300 group-hover:rotate-180" />
+            </button>
+
+            {/* White Dropdown Box for Profile */}
+            <div className="absolute right-0 top-full pt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+              <div className="w-44 bg-white rounded-md shadow-[0_16px_40px_rgba(0,0,0,0.3)] relative mt-2">
+                
+                {/* The Little Upward Triangle */}
+                <div className="absolute -top-2 right-6 w-4 h-4 bg-white rotate-45 rounded-tl-sm shadow-[-4px_-4px_8px_rgba(0,0,0,0.05)] z-0"></div>
+                
+                <div className="relative z-10 flex flex-col py-1 bg-white rounded-md overflow-hidden">
+                  <button className="text-left px-4 py-3 text-sm font-bold text-gray-900 hover:bg-gray-100 hover:text-[#0b3d33] transition-colors">Account</button>
+                  <button className="text-left px-4 py-3 text-sm font-bold text-gray-900 hover:bg-gray-100 hover:text-[#0b3d33] transition-colors">Log out</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Close Button */}
+          <button 
+            onClick={onClose} 
+            className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-full transition-all active:scale-95 ml-2 sm:ml-0"
+          >
+            <X className="h-7 w-7" />
+          </button>
+        </div>
+      </header>
 
       <div className="flex-1 max-w-4xl mx-auto w-full px-6 py-8 md:py-12 space-y-10">
-        
         
         <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-[#0b3d33] to-[#1a6e59] p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-xl transition-all duration-300 hover:shadow-2xl hover:shadow-[#0b3d33]/30 hover:-translate-y-1 cursor-default">
           <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -83,7 +153,6 @@ export default function AccountOverview({ user, profile, onClose }) {
           </button>
         </div>
 
-      
         <div className="relative transition-all duration-300 hover:shadow-[0_8px_20px_rgba(0,0,0,0.08)] rounded-full">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
           <input 
@@ -97,7 +166,6 @@ export default function AccountOverview({ user, profile, onClose }) {
         </div>
         <p className="text-xs font-medium text-gray-500 mt-2">Your search is powered by AI.</p>
 
-       
         <div className="grid md:grid-cols-2 gap-4">
           
           <div className="bg-gray-50 border border-gray-100 rounded-xl p-6 hover:bg-white hover:border-gray-200 transition-all duration-300 cursor-pointer group shadow-sm hover:shadow-[0_12px_25px_rgba(0,0,0,0.12)] hover:-translate-y-0.5">
@@ -111,7 +179,6 @@ export default function AccountOverview({ user, profile, onClose }) {
           </div>
         </div>
 
-        
         <div className="space-y-8 pb-12">
           {sections.map((section, index) => (
             <div key={index}>

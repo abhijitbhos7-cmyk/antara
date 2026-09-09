@@ -107,3 +107,32 @@ body {
 .film-look {
   filter: sepia(0.25) saturate(0.85) contrast(1.15) brightness(0.95);
 }
+/* Spotify-Style Custom Scrollbar for Antara */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  border: 3px solid #F0EDE6; /* Matches your Antara background to make it look floating */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* For the dark green sidebar specifically */
+aside ::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 3px solid #0b3d33; 
+}
+
+aside ::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+}
