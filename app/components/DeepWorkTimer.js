@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Play, Pause, X, Brain, Coffee, RotateCcw, Target } from "lucide-react";
+import { createBrowserClient } from "@supabase/ssr";
 
 export default function DeepWorkTimer({ onClose }) {
   const [timeLeft, setTimeLeft] = useState(25 * 60);
@@ -19,18 +20,44 @@ export default function DeepWorkTimer({ onClose }) {
   
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
 
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  );
+
+  
+  const saveFocusSession = async (timeRemaining) => {
+    if (mode === "focus") {
+      const elapsedSeconds = (25 * 60) - timeRemaining;
+      
+      if (elapsedSeconds > 60) {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          await supabase.from("listening_sessions").insert({
+            user_id: session.user.id,
+            program_id: "deep-work-timer",
+            duration_seconds: elapsedSeconds,
+          });
+        }
+      }
+    }
+  };
+
   useEffect(() => {
     const interval = setInterval(() => {
       setPlaceholderIndex((prev) => (prev + 1) % placeholderTasks.length);
     }, 4000);
     return () => clearInterval(interval);
-  }, []);
+  }, [placeholderTasks.length]);
 
   useEffect(() => {
     let interval = null;
     if (isActive && timeLeft > 0) {
       interval = setInterval(() => setTimeLeft((time) => time - 1), 1000);
     } else if (isActive && timeLeft === 0) {
+      
+      saveFocusSession(0);
+      
       const nextMode = mode === "focus" ? "rest" : "focus";
       setMode(nextMode);
       setTimeLeft(nextMode === "focus" ? 25 * 60 : 5 * 60);
@@ -42,14 +69,21 @@ export default function DeepWorkTimer({ onClose }) {
   const toggleTimer = () => setIsActive(!isActive);
   
   const resetTimer = () => {
+    saveFocusSession(timeLeft);
     setIsActive(false);
     setTimeLeft(mode === "focus" ? 25 * 60 : 5 * 60);
   };
 
   const switchMode = (newMode) => {
+    saveFocusSession(timeLeft); 
     setMode(newMode);
     setIsActive(false);
     setTimeLeft(newMode === "focus" ? 25 * 60 : 5 * 60);
+  };
+
+  const handleClose = () => {
+    saveFocusSession(timeLeft); 
+    onClose();
   };
 
   const formatTime = (seconds) => {
@@ -69,7 +103,7 @@ export default function DeepWorkTimer({ onClose }) {
           DEEP WORK STUDIO
         </div>
         <button 
-          onClick={onClose}
+          onClick={handleClose}
           className={`p-3 rounded-full transition-all active:scale-95 ${isFocus ? 'bg-white/10 text-white hover:bg-white/20' : 'bg-black/5 text-[#0b3d33] hover:bg-black/10'}`}
         >
           <X className="h-6 w-6" />

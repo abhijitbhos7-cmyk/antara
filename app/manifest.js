@@ -1,13 +1,19 @@
 export default function manifest() {
   return {
-    name: "Antara",
+    name: "Antara Wellness",
     short_name: "Antara",
-    description: "Find your inner rhythm.",
+    description: "Focus better. Feel every moment.",
     start_url: "/",
     display: "standalone",
-    background_color: "#080A18",
-    theme_color: "#080A18",
+    background_color: "#0b3d33",
+    theme_color: "#0b3d33",
     icons: [
+      {
+        src: "/antara-logo.svg",
+        sizes: "192x192",
+        type: "image/svg+xml",
+        purpose: "any maskable"
+      },
       {
         src: "/favicon.ico",
         sizes: "any",

@@ -23,6 +23,7 @@ export default function VoiceRecorder({ user, onRequireAuth, onPlayRecommended }
   const [isRecording, setIsRecording] = useState(false);
   const [recordings, setRecordings] = useState([]);
   const [status, setStatus] = useState("");
+  const [isFetchingRecords, setIsFetchingRecords] = useState(true); 
 
   const audioContextRef = useRef(null);
   const voiceSourceRef = useRef(null);
@@ -41,28 +42,38 @@ export default function VoiceRecorder({ user, onRequireAuth, onPlayRecommended }
   async function loadRecordings() {
     if (!user || !user.id) {
       setRecordings([]);
+      setIsFetchingRecords(false);
       return;
     }
+    
+    setIsFetchingRecords(true);
+    
     const { data, error } = await supabase
       .from("recordings")
       .select("*")
       .eq("user_id", user.id)
       .order("created_at", { ascending: false });
 
-    if (error) return;
+    if (error || !data || data.length === 0) {
+      setRecordings(data || []);
+      setIsFetchingRecords(false);
+      return;
+    }
 
-    const recordingsWithUrls = await Promise.all(
-      data.map(async (recording) => {
-        const { data: signedUrl } = await supabase.storage
-          .from("voice-recordings")
-          .createSignedUrl(recording.storage_path, 3600);
-        return {
-          ...recording,
-          url: signedUrl?.signedUrl,
-        };
-      })
-    );
+    
+    const paths = data.map(rec => rec.storage_path);
+    const { data: urlsData } = await supabase.storage
+      .from("voice-recordings")
+      .createSignedUrls(paths, 3600);
+
+    
+    const recordingsWithUrls = data.map((recording, index) => ({
+      ...recording,
+      url: urlsData?.[index]?.signedUrl || null,
+    }));
+
     setRecordings(recordingsWithUrls);
+    setIsFetchingRecords(false);
   }
 
   useEffect(() => {
@@ -136,6 +147,7 @@ export default function VoiceRecorder({ user, onRequireAuth, onPlayRecommended }
 
         setStatus("Recording saved privately.");
         await loadRecordings();
+        setTimeout(() => setStatus(""), 3000); 
       };
 
       recorderRef.current = recorder;
@@ -273,7 +285,15 @@ export default function VoiceRecorder({ user, onRequireAuth, onPlayRecommended }
 
       {status && <p className="mt-4 text-center text-sm font-bold text-[#0b3d33] animate-pulse">{status}</p>}
 
-      {recordings.length > 0 && (
+      
+      {isFetchingRecords && (
+        <div className="mt-12 flex flex-col items-center justify-center space-y-4 animate-pulse">
+          <div className="h-8 w-8 text-[#0b3d33]/40"><Loader2 className="animate-spin w-full h-full" /></div>
+          <p className="text-sm font-bold text-gray-400">Loading your private recordings...</p>
+        </div>
+      )}
+
+      {!isFetchingRecords && recordings.length > 0 && (
         <div className="mt-8 rounded-3xl bg-white/60 border border-[#0b3d33]/15 p-6 shadow-sm">
           <div className="flex items-center gap-2 mb-2">
             <Sparkles className="h-5 w-5 text-[#0b3d33]" />
@@ -294,7 +314,7 @@ export default function VoiceRecorder({ user, onRequireAuth, onPlayRecommended }
         </div>
       )}
 
-      {recordings.length > 0 && (
+      {!isFetchingRecords && recordings.length > 0 && (
         <div className="mt-6 space-y-4">
           {recordings.map((recording) => (
             <div

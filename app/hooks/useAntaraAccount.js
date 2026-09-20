@@ -158,7 +158,7 @@ export default function useAntaraAccount() {
     });
   }
 
- async function createPlaylist(name) {
+  async function createPlaylist(name) {
     if (!user) return { error: "Please sign in first." };
 
     const newId = crypto.randomUUID();
@@ -253,8 +253,6 @@ export default function useAntaraAccount() {
     await supabase.auth.signOut();
   }
 
-  
-  
   const signInWithGoogle = async () => {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
@@ -263,14 +261,14 @@ export default function useAntaraAccount() {
       },
     });
     return { data, error };
-  };
+  }
 
   const sendPhoneOtp = async (phone) => {
     const { data, error } = await supabase.auth.signInWithOtp({
       phone: phone,
     });
     return { data, error };
-  };
+  }
 
   const verifyPhoneOtp = async (phone, token) => {
     const { data, error } = await supabase.auth.verifyOtp({
@@ -279,7 +277,7 @@ export default function useAntaraAccount() {
       type: 'sms',
     });
     return { data, error };
-  };
+  }
 
   return {
     user,
