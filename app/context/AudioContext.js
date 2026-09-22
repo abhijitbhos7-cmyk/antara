@@ -9,7 +9,6 @@ export function AudioProvider({ children }) {
   const [currentTrack, setCurrentTrack] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   
-  
   const [queue, setQueue] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(-1);
   const [isShuffled, setIsShuffled] = useState(false);
@@ -35,7 +34,6 @@ export function AudioProvider({ children }) {
     }
   };
 
- 
   const playTrack = (track, newQueue = null) => {
     if (!track || !(track.audio_url || track.audioUrl)) {
       console.error("Playback stopped: No audio file found for this track.");
@@ -44,7 +42,6 @@ export function AudioProvider({ children }) {
 
     setCurrentTrack(track);
     setIsPlaying(true);
-
     
     if (newQueue && newQueue.length > 0) {
       setQueue(newQueue);
@@ -54,7 +51,6 @@ export function AudioProvider({ children }) {
       setQueue([track]);
       setCurrentIndex(0);
     } else {
-     
       const idx = queue.findIndex(t => t.id === track.id);
       if (idx !== -1) setCurrentIndex(idx);
     }
@@ -64,7 +60,6 @@ export function AudioProvider({ children }) {
     }
   };
 
-  
   const playNext = () => {
     if (queue.length === 0) return;
     
@@ -83,7 +78,6 @@ export function AudioProvider({ children }) {
     }
   };
 
-  
   const playPrevious = () => {
     if (queue.length === 0) return;
     

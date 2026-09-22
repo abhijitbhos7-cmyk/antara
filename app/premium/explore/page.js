@@ -46,7 +46,11 @@ const fallbackPricing = {
   ],
 };
 
-const navigation = ["Premium", "Support", "Download"];
+const navigation = [
+  { name: "Premium", href: "#plans" },
+  { name: "Support", href: "#faq" },
+  { name: "Download", href: "/" },
+];
 
 export default function ExplorePremiumPage() {
   const router = useRouter();
@@ -63,7 +67,6 @@ export default function ExplorePremiumPage() {
   );
 
   useEffect(() => {
-   
     const fetchPricing = async () => {
       const { data } = await supabase
         .from("pricing")
@@ -91,13 +94,11 @@ export default function ExplorePremiumPage() {
 
     fetchPricing();
 
-   
     const fetchSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       
       if (session?.user) {
         setUser(session.user);
-        
         
         const { data: profile } = await supabase
           .from("profiles")
@@ -116,7 +117,6 @@ export default function ExplorePremiumPage() {
     
     fetchSession();
 
-    
     const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
       if (!session) {
         setUser(null);
@@ -195,21 +195,29 @@ export default function ExplorePremiumPage() {
             </span>
           </Link>
 
-          
           <nav className="hidden items-center gap-8 text-[15px] font-bold lg:flex">
             {navigation.map((item) => (
-              <Link
-                key={item}
-                href={item === "Premium" ? "#plans" : "/"}
-                className="transition-colors hover:text-[#1ed760]"
-              >
-                {item}
-              </Link>
+              item.href.startsWith('#') ? (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  className="transition-colors hover:text-[#1ed760]"
+                >
+                  {item.name}
+                </a>
+              ) : (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className="transition-colors hover:text-[#1ed760]"
+                >
+                  {item.name}
+                </Link>
+              )
             ))}
 
             <span className="h-4 w-px bg-white" />
 
-            
             {user ? (
               <>
                 <Link 
@@ -249,20 +257,30 @@ export default function ExplorePremiumPage() {
           </button>
         </div>
 
-       
         {menuOpen && (
           <nav className="border-t border-white/15 bg-[#0b3d33] px-5 py-5 lg:hidden">
             <div className="mx-auto flex max-w-[1200px] flex-col gap-5 text-lg font-bold">
               {navigation.map((item) => (
-                <Link
-                  key={item}
-                  href={item === "Premium" ? "#plans" : "/"}
-                  onClick={() => setMenuOpen(false)}
-                >
-                  {item}
-                </Link>
+                item.href.startsWith('#') ? (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    onClick={() => setMenuOpen(false)}
+                    className="transition-colors hover:text-[#1ed760]"
+                  >
+                    {item.name}
+                  </a>
+                ) : (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    onClick={() => setMenuOpen(false)}
+                    className="transition-colors hover:text-[#1ed760]"
+                  >
+                    {item.name}
+                  </Link>
+                )
               ))}
-              
               
               {user ? (
                 <>
@@ -476,7 +494,7 @@ export default function ExplorePremiumPage() {
         </div>
       </section>
 
-      <section className="bg-black px-5 py-20 sm:py-28 lg:px-8">
+      <section id="faq" className="scroll-mt-20 bg-black px-5 py-20 sm:py-28 lg:px-8">
         <div className="mx-auto max-w-[820px]">
           <h2 className="text-center text-4xl font-black tracking-[-0.045em] sm:text-5xl">
             Questions?

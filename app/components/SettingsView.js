@@ -1,14 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import { Crown, ExternalLink, ShieldCheck, Camera, Save, Loader2 } from "lucide-react";
+import { Crown, ExternalLink, ShieldCheck, Camera, Save, Loader2, Globe } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { createBrowserClient } from "@supabase/ssr";
 import useAntaraAccount from "../hooks/useAntaraAccount"; 
+import { useLanguage } from "../context/LanguageContext"; 
 
 export default function SettingsView({ profile }) {
   const router = useRouter();
   
+  // 1. We grab the "t" function from our context here!
+  const languageContext = useLanguage();
+  const language = languageContext?.language || "en-UK";
+  const changeLanguage = languageContext?.changeLanguage || (() => {});
+  const t = languageContext?.t || ((word) => word); 
 
   const { user, saveProfile } = useAntaraAccount();
   const [username, setUsername] = useState(profile?.username || "");
@@ -23,11 +29,9 @@ export default function SettingsView({ profile }) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   );
   
- 
   const tier = profile?.subscription_tier || 'free';
   const isPlatinum = tier === 'platinum';
 
-  
   const [settings, setSettings] = useState({
     normalizeVolume: true,
     autoPlayAmbience: false,
@@ -45,7 +49,6 @@ export default function SettingsView({ profile }) {
     setSettings(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
- 
   const handleImageUpload = async (e) => {
     try {
       setIsUploading(true);
@@ -75,7 +78,6 @@ export default function SettingsView({ profile }) {
     }
   };
 
- 
   const handleSaveProfileData = async (e) => {
     e.preventDefault();
     setIsSaving(true);
@@ -95,7 +97,6 @@ export default function SettingsView({ profile }) {
     }
   };
 
-  
   const ToggleRow = ({ label, description, stateKey, isLocked }) => (
     <div className="flex items-center justify-between py-4 border-b border-gray-50 group">
       <div className="pr-4">
@@ -115,14 +116,15 @@ export default function SettingsView({ profile }) {
     <div className="p-6 md:p-12 animate-in fade-in duration-500 max-w-4xl mx-auto pb-32">
       
       <div className="mb-10">
-        <h2 className="text-3xl font-black text-gray-900 tracking-tight">Settings</h2>
+        {/* 2. Look here! Instead of typing "Settings", we use t("settingsTitle") */}
+        <h2 className="text-3xl font-black text-gray-900 tracking-tight">{t("settingsTitle")}</h2>
       </div>
 
       <div className="space-y-12">
 
-       
         <section>
-          <h3 className="font-bold text-lg text-gray-900 mb-6 border-b border-gray-100 pb-2">Public Profile</h3>
+          {/* We use t("publicProfile") here */}
+          <h3 className="font-bold text-lg text-gray-900 mb-6 border-b border-gray-100 pb-2">{t("publicProfile")}</h3>
           
           <div className="flex flex-col md:flex-row md:items-start gap-8">
             <div className="relative group cursor-pointer shrink-0" onClick={() => document.getElementById('avatar-upload').click()}>
@@ -182,9 +184,9 @@ export default function SettingsView({ profile }) {
           </div>
         </section>
         
-       
         <section>
-          <h3 className="font-bold text-lg text-gray-900 mb-2 border-b border-gray-100 pb-2">Account</h3>
+          {/* We use t("account") here */}
+          <h3 className="font-bold text-lg text-gray-900 mb-2 border-b border-gray-100 pb-2">{t("account")}</h3>
           <div className="flex items-center justify-between py-4">
             <div>
               <p className="text-sm font-medium text-gray-900">Current Plan</p>
@@ -207,7 +209,29 @@ export default function SettingsView({ profile }) {
           </div>
         </section>
 
-        
+        <section>
+          {/* We use t("language") here */}
+          <h3 className="font-bold text-lg text-gray-900 mb-2 border-b border-gray-100 pb-2">{t("language")}</h3>
+          <div className="flex flex-col md:flex-row md:items-center justify-between py-4 gap-4">
+            <div className="pr-4">
+              <p className="text-sm font-medium text-gray-900">{t("chooseLanguage")}</p>
+              <p className="text-xs text-gray-500 mt-0.5">Changes will be applied instantly</p>
+            </div>
+            <select 
+              value={language}
+              onChange={(e) => changeLanguage(e.target.value)}
+              className="bg-[#F8F5F0] hover:bg-white text-gray-900 rounded-md px-4 py-2.5 text-sm font-bold outline-none border border-gray-200 cursor-pointer transition-colors min-w-[240px]"
+            >
+              <option value="en-UK">English (United Kingdom)</option>
+              <option value="en-US">English (United States)</option>
+              <option value="es">Español (Spanish)</option>
+              <option value="fr">Français (French)</option>
+              <option value="hi">हिन्दी (Hindi)</option>
+            </select>
+          </div>
+        </section>
+
+        {/* ... Rest of the settings page remains exactly the same ... */}
         <section>
           <h3 className="font-bold text-lg text-gray-900 mb-2 border-b border-gray-100 pb-2">Audio quality</h3>
           
@@ -215,7 +239,7 @@ export default function SettingsView({ profile }) {
             <div>
               <p className="text-sm font-medium text-gray-900">Streaming quality</p>
             </div>
-            <select className="bg-gray-100 text-gray-900 rounded-md px-3 py-2 text-sm font-medium outline-none border border-gray-200 cursor-pointer hover:bg-gray-200 transition-colors">
+            <select className="bg-[#F8F5F0] hover:bg-white border border-gray-200 text-gray-900 rounded-md px-3 py-2 text-sm font-medium outline-none cursor-pointer transition-colors">
               <option>Automatic</option>
               <option>Low (Data Saver)</option>
               <option>Normal</option>
@@ -250,7 +274,6 @@ export default function SettingsView({ profile }) {
           </div>
         </section>
 
-       
         <section>
           <h3 className="font-bold text-lg text-gray-900 mb-2 border-b border-gray-100 pb-2">Playback & Zen Mode</h3>
           
@@ -277,7 +300,6 @@ export default function SettingsView({ profile }) {
           </div>
         </section>
 
-       
         <section>
           <h3 className="font-bold text-lg text-gray-900 mb-2 border-b border-gray-100 pb-2">Display & Visuals</h3>
           
@@ -294,7 +316,6 @@ export default function SettingsView({ profile }) {
           />
         </section>
 
-        
         <section>
           <h3 className="font-bold text-lg text-gray-900 mb-2 border-b border-gray-100 pb-2">Privacy</h3>
           

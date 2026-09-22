@@ -9,9 +9,12 @@ import {
 import { useState, useRef, useEffect } from "react";
 import { createBrowserClient } from "@supabase/ssr";
 import PremiumModal from "./PremiumModal"; 
+import { useAudio } from "../context/AudioContext"; 
 
 export default function PlaylistDetail({ playlist, allPrograms = [], onBack, onPlay, isSaved, onToggleSave, savedTracks, onToggleTrackSave, onDeletePlaylist, customPlaylists = [], onAddTrackToPlaylist }) {
   
+  const { currentTrack } = useAudio(); 
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
   const searchInputRef = useRef(null);
@@ -34,7 +37,6 @@ export default function PlaylistDetail({ playlist, allPrograms = [], onBack, onP
   const [showSubMenu, setShowSubMenu] = useState(false);
   const [viewMode, setViewMode] = useState("list"); 
 
-  
   const [downloadedTracks, setDownloadedTracks] = useState(new Set());
   const [isDownloading, setIsDownloading] = useState(null);
   const [tier, setTier] = useState('free');
@@ -61,7 +63,6 @@ export default function PlaylistDetail({ playlist, allPrograms = [], onBack, onP
         if (profileData?.subscription_tier) setTier(profileData.subscription_tier);
       }
 
-      
       if ('caches' in window) {
         const cache = await caches.open('antara-offline-audio');
         const keys = await cache.keys();
@@ -153,7 +154,6 @@ export default function PlaylistDetail({ playlist, allPrograms = [], onBack, onP
     onPlay(localTracks[randomIndex], localTracks);
   };
 
- 
   const handleDownloadTrack = async (e, track) => {
     e.stopPropagation();
     
@@ -196,22 +196,33 @@ export default function PlaylistDetail({ playlist, allPrograms = [], onBack, onP
 
   return (
     <>
+      <style dangerouslySetInnerHTML={{__html: `
+        @keyframes eq { 0%, 100% { height: 4px; } 50% { height: 14px; } }
+        .eq-bar { animation: eq 1s ease-in-out infinite; width: 3px; background-color: #0b3d33; border-radius: 2px; }
+        .eq-1 { animation-delay: 0.1s; }
+        .eq-2 { animation-delay: 0.4s; }
+        .eq-3 { animation-delay: 0.2s; }
+      `}} />
+
       {showPremiumModal && <PremiumModal onClose={() => setShowPremiumModal(false)} />}
       
       <div className="animate-in fade-in duration-500 w-full min-h-full bg-[#F8F5F0] relative pb-24 -mt-8 overflow-x-hidden [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-        <div className="absolute top-0 left-0 w-full h-[400px] bg-gradient-to-b from-[#0b3d33]/15 to-[#F8F5F0] pointer-events-none z-0"></div>
         
-        <div className="relative z-10 flex flex-col md:flex-row items-end gap-6 md:gap-8 px-6 md:px-8 pt-16 pb-6">
-          <button onClick={onBack} className="absolute top-4 left-6 flex h-9 w-9 items-center justify-center rounded-full bg-black/5 text-gray-900 transition-all hover:bg-black/10 hover:scale-105 active:scale-95">
+        
+        <div className="absolute top-0 left-0 w-full h-[500px] bg-[radial-gradient(ellipse_at_top,_rgba(11,61,51,0.2)_0%,_rgba(248,245,240,0)_70%)] pointer-events-none z-0"></div>
+        <div className="absolute top-0 left-0 w-full h-[300px] bg-gradient-to-b from-[#0b3d33]/10 to-transparent pointer-events-none z-0"></div>
+        
+        <div className="relative z-10 flex flex-col md:flex-row items-end gap-6 md:gap-8 px-6 md:px-8 pt-16 pb-8 border-b border-gray-200/50">
+          <button onClick={onBack} className="absolute top-4 left-6 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm text-gray-900 transition-all hover:bg-gray-50 hover:scale-105 active:scale-95 border border-gray-200/50">
             <ArrowLeft className="h-5 w-5" />
           </button>
 
           {playlist.isLikedSongs ? (
-            <div className="h-48 w-48 md:h-[232px] md:w-[232px] rounded-lg flex items-center justify-center bg-gradient-to-br from-[#450af5] to-[#c4efd9] shadow-[0_12px_40px_rgba(0,0,0,0.15)] shrink-0 mt-8">
+            <div className="h-48 w-48 md:h-[232px] md:w-[232px] rounded-lg flex items-center justify-center bg-gradient-to-br from-[#450af5] to-[#c4efd9] shadow-[0_24px_50px_rgba(0,0,0,0.2)] shrink-0 mt-8 hover:scale-[1.02] transition-transform duration-500">
                <LucideHeart className="h-20 w-20 md:h-24 md:w-24 text-white drop-shadow-md" fill="currentColor" />
             </div>
           ) : (
-            <div onClick={playlist.isCustom ? openEditModal : undefined} className={`group relative h-48 w-48 md:h-[232px] md:w-[232px] rounded-lg bg-gray-200 flex items-center justify-center shadow-[0_12px_40px_rgba(0,0,0,0.1)] shrink-0 overflow-hidden mt-8 ${playlist.isCustom ? 'cursor-pointer' : ''}`}>
+            <div onClick={playlist.isCustom ? openEditModal : undefined} className={`group relative h-48 w-48 md:h-[232px] md:w-[232px] rounded-lg bg-gray-200 flex items-center justify-center shadow-[0_24px_50px_rgba(0,0,0,0.2)] shrink-0 overflow-hidden mt-8 hover:scale-[1.02] transition-transform duration-500 ${playlist.isCustom ? 'cursor-pointer' : ''}`}>
               {localImage ? <img src={localImage} alt={localName} className="h-full w-full object-cover" /> : <Music className="h-24 w-24 text-gray-400" />}
               {playlist.isCustom && (
                 <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center transition-opacity duration-300 z-20">
@@ -223,13 +234,13 @@ export default function PlaylistDetail({ playlist, allPrograms = [], onBack, onP
           )}
           
           <div className="flex flex-col w-full text-gray-900 pb-2 overflow-hidden">
-            <p className="text-sm font-bold text-gray-800 mb-1">{playlist.isCustom ? 'Public Playlist' : playlist.isLikedSongs ? 'Playlist' : 'Album'}</p>
+            <p className="text-xs font-black uppercase tracking-widest text-gray-700 mb-2">{playlist.isCustom ? 'Public Playlist' : playlist.isLikedSongs ? 'Playlist' : 'Album'}</p>
             <h1 onClick={playlist.isCustom ? openEditModal : undefined} className={`text-5xl md:text-6xl lg:text-7xl xl:text-[80px] font-black tracking-tighter leading-[1.05] pb-3 break-words text-wrap line-clamp-2 drop-shadow-sm ${playlist.isCustom ? 'cursor-pointer hover:text-[#0b3d33]' : ''}`}>
               {localName}
             </h1>
-            {localDesc && <p onClick={playlist.isCustom ? openEditModal : undefined} className={`text-sm font-medium text-gray-600 max-w-2xl mb-3 line-clamp-2 ${playlist.isCustom ? 'cursor-pointer hover:text-gray-900' : ''}`}>{localDesc}</p>}
+            {localDesc && <p onClick={playlist.isCustom ? openEditModal : undefined} className={`text-sm font-medium text-gray-600 max-w-2xl mb-4 line-clamp-2 ${playlist.isCustom ? 'cursor-pointer hover:text-gray-900' : ''}`}>{localDesc}</p>}
             
-            <div className="flex items-center gap-1.5 text-sm font-bold text-gray-800 flex-wrap">
+            <div className="flex items-center gap-2 text-sm font-bold text-gray-800 flex-wrap mt-1">
               <div className="h-6 w-6 rounded-full bg-[#0b3d33] flex items-center justify-center text-white text-[10px] shrink-0">{playlist.isCustom ? 'A' : 'AW'}</div>
               <span className="hover:underline cursor-pointer whitespace-nowrap">{playlist.isCustom ? 'User' : 'Antara Wellness'}</span>
               <span className="text-gray-500 font-medium px-0.5">•</span>
@@ -238,9 +249,10 @@ export default function PlaylistDetail({ playlist, allPrograms = [], onBack, onP
           </div>
         </div>
 
-        <div className="relative z-20 px-6 md:px-8 py-4 flex items-center justify-between" ref={menuRef}>
-          <div className="flex items-center gap-4 md:gap-6">
-            <button onClick={() => localTracks.length > 0 && onPlay(localTracks[0], localTracks)} className="flex h-14 w-14 items-center justify-center rounded-full bg-[#0b3d33] text-white shadow-xl transition-all hover:scale-105 hover:bg-[#072a23] active:scale-95 shrink-0">
+        <div className="relative z-20 px-6 md:px-8 py-6 flex items-center justify-between" ref={menuRef}>
+          <div className="flex items-center gap-6">
+           
+            <button onClick={() => localTracks.length > 0 && onPlay(localTracks[0], localTracks)} className="flex h-14 w-14 items-center justify-center rounded-full bg-[#0b3d33] text-white shadow-[0_8px_20px_rgba(11,61,51,0.3)] transition-all hover:scale-105 hover:bg-[#072a23] active:scale-95 shrink-0">
               <Play className="h-6 w-6 fill-current ml-1" />
             </button>
 
@@ -259,21 +271,21 @@ export default function PlaylistDetail({ playlist, allPrograms = [], onBack, onP
                 <MoreHorizontal className="h-8 w-8" />
               </button>
               {isMenuOpen && (
-                <div className="absolute top-12 left-0 w-56 rounded-md bg-white p-1 shadow-[0_16px_40px_rgba(0,0,0,0.15)] border border-gray-100 animate-in fade-in zoom-in-95 duration-100">
-                  <button onClick={() => setIsMenuOpen(false)} className="flex w-full items-center justify-between rounded-sm px-3 py-2.5 text-sm font-bold text-gray-700 hover:bg-gray-100 transition-colors">
+                <div className="absolute top-12 left-0 w-56 rounded-xl bg-white p-1.5 shadow-[0_20px_60px_rgba(0,0,0,0.12)] border border-gray-100 animate-in fade-in zoom-in-95 duration-100">
+                  <button onClick={() => setIsMenuOpen(false)} className="flex w-full items-center justify-between rounded-md px-3 py-2.5 text-sm font-bold text-gray-700 hover:bg-gray-100 transition-colors">
                     Add to queue
                   </button>
                   <div className="my-1 h-px w-full bg-gray-100"></div>
                   {playlist.isCustom && (
                     <>
-                      <button onClick={openEditModal} className="flex w-full items-center gap-3 rounded-sm px-3 py-2.5 text-sm font-bold text-gray-700 hover:bg-gray-100 transition-colors"><Pencil className="h-4 w-4 text-gray-500" /> Edit details</button>
+                      <button onClick={openEditModal} className="flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm font-bold text-gray-700 hover:bg-gray-100 transition-colors"><Pencil className="h-4 w-4 text-gray-500" /> Edit details</button>
                       {onDeletePlaylist && (
-                        <button onClick={() => { if(window.confirm("Delete this playlist?")) { onDeletePlaylist(); setIsMenuOpen(false); } }} className="flex w-full items-center gap-3 rounded-sm px-3 py-2.5 text-sm font-bold text-red-600 hover:bg-red-50 transition-colors"><Trash2 className="h-4 w-4" /> Delete</button>
+                        <button onClick={() => { if(window.confirm("Delete this playlist?")) { onDeletePlaylist(); setIsMenuOpen(false); } }} className="flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm font-bold text-red-600 hover:bg-red-50 transition-colors"><Trash2 className="h-4 w-4" /> Delete</button>
                       )}
                       <div className="my-1 h-px w-full bg-gray-100"></div>
                     </>
                   )}
-                  <button onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/playlist/${playlist.id}`); alert("Link copied!"); setIsMenuOpen(false); }} className="flex w-full items-center gap-3 rounded-sm px-3 py-2.5 text-sm font-bold text-gray-700 hover:bg-gray-100 transition-colors"><Share2 className="h-4 w-4 text-gray-500" /> Share</button>
+                  <button onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/playlist/${playlist.id}`); alert("Link copied!"); setIsMenuOpen(false); }} className="flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm font-bold text-gray-700 hover:bg-gray-100 transition-colors"><Share2 className="h-4 w-4 text-gray-500" /> Share</button>
                 </div>
               )}
             </div>
@@ -297,9 +309,9 @@ export default function PlaylistDetail({ playlist, allPrograms = [], onBack, onP
               <button onClick={() => setShowSearch(false)} className="text-gray-400 hover:text-gray-800 transition-colors"><X className="h-5 w-5" /></button>
             </div>
             
-            <div className="relative max-w-[400px] mb-6">
+            <div className="relative max-w-[400px] mb-6 group">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search className="h-4 w-4 text-gray-500" />
+                <Search className="h-4 w-4 text-gray-400 transition-colors group-hover:text-gray-600" />
               </div>
               <input 
                 ref={searchInputRef}
@@ -307,7 +319,7 @@ export default function PlaylistDetail({ playlist, allPrograms = [], onBack, onP
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search for songs, artists, or topics" 
-                className="w-full bg-white border border-gray-200 text-gray-900 rounded-md py-3 pl-10 pr-4 text-sm font-medium outline-none focus:border-[#0b3d33] focus:ring-1 focus:ring-[#0b3d33] transition-all shadow-sm placeholder:text-gray-500"
+                className="w-full bg-white border border-gray-200 text-gray-900 rounded-md py-3 pl-10 pr-4 text-sm font-medium outline-none focus:border-[#0b3d33] focus:ring-1 focus:ring-[#0b3d33]/20 transition-all shadow-sm placeholder:text-gray-400 hover:border-gray-300 hover:bg-gray-50/80"
               />
             </div>
 
@@ -342,7 +354,7 @@ export default function PlaylistDetail({ playlist, allPrograms = [], onBack, onP
         )}
 
         {localTracks.length > 0 && (
-          <div className="relative z-10 grid grid-cols-[16px_1fr_auto] md:grid-cols-[16px_minmax(0,2fr)_minmax(0,1.5fr)_auto] gap-4 items-center px-6 md:px-12 py-2 border-b border-gray-200/60 mb-2 text-xs font-bold text-gray-500 uppercase tracking-widest">
+          <div className="relative z-10 grid grid-cols-[32px_1fr_auto] md:grid-cols-[32px_minmax(0,2fr)_minmax(0,1.5fr)_auto] gap-4 items-center px-6 md:px-10 py-2 border-b border-gray-200/60 mb-3 text-xs font-bold text-gray-500 uppercase tracking-widest ml-2 mr-2">
             <div className="text-right">#</div>
             <div>Title</div>
             <div className="hidden md:block">Album</div>
@@ -356,22 +368,37 @@ export default function PlaylistDetail({ playlist, allPrograms = [], onBack, onP
             const isDownloaded = downloadedTracks.has(track.id);
             const isThisDownloading = isDownloading === track.id;
             const trackImage = track.image_url || track.image || localImage || "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=100&auto=format&fit=crop&q=60";
+            const isPlayingThis = currentTrack?.id === track.id;
             
             return (
               <div 
                 key={track.id} 
-                className={`group grid grid-cols-[16px_1fr_auto] md:grid-cols-[16px_minmax(0,2fr)_minmax(0,1.5fr)_auto] items-center gap-4 rounded-md px-2 md:px-4 ${viewMode === "compact" ? "py-1" : "py-2"} hover:bg-black/5 transition cursor-pointer`} 
+                
+                className={`group grid grid-cols-[32px_1fr_auto] md:grid-cols-[32px_minmax(0,2fr)_minmax(0,1.5fr)_auto] items-center gap-4 rounded-xl px-2 md:px-4 ${viewMode === "compact" ? "py-1.5" : "py-2.5"} hover:bg-white hover:shadow-sm border border-transparent hover:border-gray-200/60 transition-all duration-200 cursor-pointer`} 
                 onClick={() => onPlay(track, localTracks)}
               >
-                <div className="w-full text-right text-base text-gray-500 font-medium group-hover:hidden">{index + 1}</div>
-                <div className="hidden w-full justify-end text-gray-900 group-hover:flex"><Play className="h-4 w-4 fill-current mr-0.5" /></div>
+                <div className="w-full flex justify-end items-center relative text-base text-gray-500 font-medium h-full pr-1">
+                  {isPlayingThis ? (
+                   
+                    <div className="flex items-end gap-[2px] h-3 w-3">
+                      <div className="eq-bar eq-1 bg-[#0b3d33]"></div>
+                      <div className="eq-bar eq-2 bg-[#0b3d33]"></div>
+                      <div className="eq-bar eq-3 bg-[#0b3d33]"></div>
+                    </div>
+                  ) : (
+                    <>
+                      <span className="group-hover:hidden">{index + 1}</span>
+                      <Play className="h-4 w-4 fill-current text-gray-900 hidden group-hover:block transition-all" />
+                    </>
+                  )}
+                </div>
                 
                 <div className="flex items-center gap-3 min-w-0 pr-4">
                   {viewMode === "list" && (
                     <img src={trackImage} alt="" className="h-10 w-10 rounded shadow-sm shrink-0 object-cover" />
                   )}
                   <div className="flex flex-col min-w-0">
-                    <span className={`text-base font-bold truncate ${String(track.id || '').endsWith('-2') && !playlist.isLikedSongs ? 'text-[#0b3d33]' : 'text-gray-900'}`}>{track.title}</span>
+                    <span className={`text-base font-bold truncate transition-colors ${isPlayingThis ? 'text-[#0b3d33]' : 'text-gray-900'}`}>{track.title}</span>
                     <span className="text-sm text-gray-500 truncate mt-0.5 group-hover:text-gray-800 transition-colors">{track.artist || "Antara Wellness"}</span>
                   </div>
                 </div>
@@ -379,7 +406,6 @@ export default function PlaylistDetail({ playlist, allPrograms = [], onBack, onP
                 <div className="hidden md:block text-sm text-gray-500 truncate pr-4 hover:underline hover:text-gray-900 transition-colors">{track.album || track.topic || "Antara Session"}</div>
                 
                 <div className="flex items-center gap-4 md:gap-6 pr-2 text-gray-500 track-menu-container relative">
-                  
                   
                   <button 
                     onClick={(e) => handleDownloadTrack(e, track)} 

@@ -1,4 +1,5 @@
 import { AudioProvider } from "./context/AudioContext";
+import { LanguageProvider } from "./context/LanguageContext";
 import { Figtree } from 'next/font/google';
 import './globals.css';
 
@@ -17,9 +18,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${figtree.className} antialiased bg-[#F0EDE6] text-gray-900`}>
-        <AudioProvider>
-          {children}
-        </AudioProvider>
+        <LanguageProvider>
+          <AudioProvider>
+            {children}
+          </AudioProvider>
+        </LanguageProvider>
       </body>
     </html>
   );

@@ -37,16 +37,14 @@ export default function PremiumPage() {
   }, []);
 
   const handleCheckout = (planName, price, interval) => {
-    
     router.push(`/premium/checkout?plan=${encodeURIComponent(planName)}&price=${price}&interval=${encodeURIComponent(interval)}`);
   };
 
   return (
-    <div className="flex h-screen w-full bg-[#F0EDE6] overflow-hidden font-sans text-gray-900 selection:bg-[#8CE0B7] selection:text-[#041c17] p-2 gap-2">
+    <div className="flex h-screen w-full bg-[#F0EDE6] overflow-hidden font-sans text-gray-900 selection:bg-[#8CE0B7] selection:text-[#041c17] p-0 gap-0">
         
-     
-      <div className="w-[280px] shrink-0 flex-col gap-2 hidden md:flex h-full">
-        <div className="bg-[#0b3d33] rounded-2xl p-6 flex flex-col gap-6 shadow-md relative overflow-hidden shrink-0 border border-black/5">
+      <div className="w-[280px] shrink-0 flex-col gap-0 hidden md:flex h-full">
+        <div className="bg-[#0b3d33] rounded-none p-6 flex flex-col gap-6 shadow-md relative overflow-hidden shrink-0 border border-black/5 border-b-0">
           <div className="absolute top-0 right-0 w-32 h-32 bg-white opacity-5 blur-[50px] rounded-full pointer-events-none"></div>
           <div className="flex items-center gap-3 relative z-10">
             <img src="/antara-logo.svg" alt="Antara Logo" className="h-8 w-8 object-contain filter brightness-0 invert" />
@@ -57,7 +55,7 @@ export default function PremiumPage() {
           </Link>
         </div>
 
-        <div className="bg-[#0b3d33] rounded-2xl flex-1 flex flex-col overflow-hidden shadow-md relative border border-black/5">
+        <div className="bg-[#0b3d33] rounded-none flex-1 flex flex-col overflow-hidden shadow-md relative border border-black/5 border-t-0">
           <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 blur-[80px] rounded-full pointer-events-none"></div>
           <div className="px-6 py-5 flex items-center justify-between shadow-sm bg-black/10 relative z-10">
             <div className="flex items-center gap-3 text-sm font-bold text-white/70">
@@ -82,9 +80,7 @@ export default function PremiumPage() {
         </div>
       </div>
 
-     
-      <div className="flex-1 h-full overflow-y-auto bg-[#041c17] text-[#F8F5F0] rounded-2xl shadow-xl border border-black/10 relative flex flex-col [&::-webkit-scrollbar]:hidden">
-        
+      <div className="flex-1 h-full overflow-y-auto bg-[#041c17] text-[#F8F5F0] rounded-none shadow-xl border border-black/10 relative flex flex-col [&::-webkit-scrollbar]:hidden">
         
         <nav className="flex items-center justify-between p-6 md:px-12 z-50 sticky top-0 bg-[#041c17]/80 backdrop-blur-md border-b border-white/5">
           <Link href="/premium/explore" className="text-sm font-bold text-[#8CE0B7] hover:text-[#041c17] flex items-center gap-2 transition-all px-5 py-2.5 rounded-full border border-[#8CE0B7] hover:bg-[#8CE0B7] shadow-[0_0_15px_rgba(140,224,183,0.2)]">
@@ -95,7 +91,6 @@ export default function PremiumPage() {
           </Link>
         </nav>
 
-        
         <div className="relative pt-12 pb-24 px-6 text-center max-w-4xl mx-auto w-full shrink-0">
           <div className="absolute inset-0 bg-gradient-to-b from-[#0b3d33]/50 to-transparent -z-10 rounded-[4rem] blur-3xl opacity-50"></div>
           <h1 className="text-4xl md:text-5xl font-black mb-6 text-white tracking-tight">Experience Antara Premium</h1>
@@ -104,33 +99,34 @@ export default function PremiumPage() {
             <button onClick={() => handleCheckout(prices.standard_name, prices.monthly, "month")} className="bg-[#F8F5F0] text-[#041c17] px-8 py-3.5 rounded-full font-black text-sm hover:bg-white hover:scale-105 active:scale-95 transition-all w-full sm:w-auto shadow-lg shadow-white/10">
               Get {prices.standard_name}
             </button>
-            <button className="bg-transparent border-2 border-gray-500 text-white px-8 py-3.5 rounded-full font-bold text-sm hover:border-white hover:scale-105 active:scale-95 transition-all w-full sm:w-auto">
+            <button 
+              onClick={() => document.getElementById("plans")?.scrollIntoView({ behavior: "smooth" })}
+              className="bg-transparent border-2 border-gray-500 text-white px-8 py-3.5 rounded-full font-bold text-sm hover:border-white hover:scale-105 active:scale-95 transition-all w-full sm:w-auto"
+            >
               View all plans
             </button>
           </div>
           <p className="text-[10px] text-gray-500 mt-6 font-medium">Limited time offer. Limited Eligibility. Terms Apply.</p>
         </div>
 
-       
-        <div className="bg-gradient-to-b from-[#072a23] to-[#041c17] py-20 px-6 w-full shrink-0">
+        <div id="plans" className="bg-white py-20 px-6 w-full shrink-0">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-black mb-4 text-white">Choose the Premium plan that's right for you.</h2>
-              <p className="text-gray-400 font-medium mb-6">Listen to immersive soundscapes and ad-free music when you want.<br />Pay in various ways. Cancel anytime.</p>
+              <h2 className="text-3xl md:text-4xl font-black mb-4 text-gray-900">Choose the Premium plan that's right for you.</h2>
+              <p className="text-gray-600 font-medium mb-6">Listen to immersive soundscapes and ad-free music when you want.<br />Pay in various ways. Cancel anytime.</p>
               
               <div className="flex flex-col items-center gap-3">
                 <div className="flex items-center gap-2">
-                  <div className="bg-white rounded flex items-center justify-center h-8 w-12 shadow-sm"><span className="text-[10px] font-black text-gray-800 italic">UPI</span></div>
-                  <div className="bg-white rounded flex items-center justify-center h-8 w-12 shadow-sm"><span className="text-[12px] font-black text-[#5f259f]">पे</span></div>
-                  <div className="bg-white rounded flex items-center justify-center h-8 w-12 shadow-sm"><span className="text-[14px] font-bold text-gray-600">G</span></div>
-                  <div className="bg-white rounded flex items-center justify-center h-8 w-12 shadow-sm"><span className="text-[10px] font-black text-[#00baf2] tracking-tighter">Paytm</span></div>
+                  <div className="bg-gray-50 border border-gray-200 rounded flex items-center justify-center h-8 w-12 shadow-sm"><span className="text-[10px] font-black text-gray-800 italic">UPI</span></div>
+                  <div className="bg-gray-50 border border-gray-200 rounded flex items-center justify-center h-8 w-12 shadow-sm"><span className="text-[12px] font-black text-[#5f259f]">पे</span></div>
+                  <div className="bg-gray-50 border border-gray-200 rounded flex items-center justify-center h-8 w-12 shadow-sm"><span className="text-[14px] font-bold text-gray-600">G</span></div>
+                  <div className="bg-gray-50 border border-gray-200 rounded flex items-center justify-center h-8 w-12 shadow-sm"><span className="text-[10px] font-black text-[#00baf2] tracking-tighter">Paytm</span></div>
                 </div>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto mt-10">
               
-             
               <div className="bg-[#0b3d33] rounded-3xl p-8 border border-white/10 hover:border-white/30 transition-colors relative flex flex-col">
                 <span className="bg-[#F8F5F0] text-[#041c17] text-xs font-black px-3 py-1 rounded-md mb-6 w-fit">₹{prices.monthly} / month</span>
                 <h3 className="text-3xl font-black text-white mb-2">{prices.standard_name}</h3>
@@ -145,7 +141,6 @@ export default function PremiumPage() {
                 </button>
               </div>
 
-              
               <div className="bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] rounded-3xl p-8 border border-yellow-500/30 shadow-2xl relative flex flex-col transform md:-translate-y-4">
                 <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-yellow-500 text-black text-[10px] font-black uppercase tracking-widest px-4 py-1 rounded-full">Most Popular</div>
                 <h3 className="text-3xl font-black text-yellow-500 mb-2 mt-4">{prices.platinum_name}</h3>
@@ -160,7 +155,6 @@ export default function PremiumPage() {
                 </button>
               </div>
 
-              
               <div className="bg-[#0b3d33] rounded-3xl p-8 border border-white/10 hover:border-white/30 transition-colors relative flex flex-col">
                 <span className="bg-[#8CE0B7] text-[#041c17] text-xs font-black px-3 py-1 rounded-md mb-6 w-fit">Savings available</span>
                 <h3 className="text-3xl font-black text-white mb-2">{prices.student_name}</h3>
@@ -175,7 +169,6 @@ export default function PremiumPage() {
                 </button>
               </div>
 
-             
               {prices.custom_plans.map((plan) => (
                 <div key={plan.id} className="bg-[#122d22] rounded-3xl p-8 border border-[#8CE0B7]/20 shadow-xl relative flex flex-col transition-transform hover:-translate-y-2">
                   <span className="bg-[#8CE0B7] text-[#041c17] text-xs font-black px-3 py-1 rounded-md mb-6 w-fit">Special Tier</span>
@@ -195,13 +188,11 @@ export default function PremiumPage() {
           </div>
         </div>
 
-        
         <footer className="bg-[#041c17] pt-20 pb-12 px-6 md:px-12 border-t border-white/10 shrink-0 w-full mt-auto">
           <div className="max-w-7xl mx-auto">
             
             <div className="flex flex-col md:flex-row justify-between gap-12 mb-20">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-8 w-full md:w-3/4">
-                
                 
                 <div>
                   <h4 className="text-white font-bold mb-6 text-sm">Company</h4>
@@ -212,7 +203,6 @@ export default function PremiumPage() {
                   </ul>
                 </div>
 
-                
                 <div>
                   <h4 className="text-white font-bold mb-6 text-sm">Communities</h4>
                   <ul className="space-y-4">
@@ -224,7 +214,6 @@ export default function PremiumPage() {
                   </ul>
                 </div>
 
-                
                 <div>
                   <h4 className="text-white font-bold mb-6 text-sm">Useful links</h4>
                   <ul className="space-y-4">
@@ -234,7 +223,6 @@ export default function PremiumPage() {
                   </ul>
                 </div>
 
-                
                 <div>
                   <h4 className="text-white font-bold mb-6 text-sm">Antara Plans</h4>
                   <ul className="space-y-4">
@@ -246,7 +234,6 @@ export default function PremiumPage() {
                 </div>
               </div>
 
-              
               <div className="flex gap-4 md:justify-end">
                 <button className="h-10 w-10 rounded-full bg-[#292929] hover:bg-white text-white hover:text-black flex items-center justify-center transition-all">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
@@ -260,7 +247,6 @@ export default function PremiumPage() {
               </div>
             </div>
 
-           
             <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-white/10 gap-6">
               <div className="flex flex-wrap gap-x-6 gap-y-3">
                 <Link href="#" className="text-xs text-gray-400 hover:text-white transition-colors">Legal</Link>

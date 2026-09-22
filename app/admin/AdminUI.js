@@ -264,7 +264,7 @@ export default function AdminUI({ profile, user }) {
   const isWorkspaceTabActive = !['discover', 'ambience'].includes(activeTab);
 
   return (
-    <div className="flex h-screen w-full bg-[#F0EDE6] overflow-hidden p-0 md:p-3 md:gap-3 font-sans text-gray-900 relative">
+    <div className="flex h-screen w-full bg-[#F0EDE6] overflow-hidden p-0 md:p-0 md:gap-0 font-sans text-gray-900 relative">
       
       
       {activeToast && (
@@ -292,8 +292,8 @@ export default function AdminUI({ profile, user }) {
       )}
 
       
-      <div className={`fixed inset-y-0 left-0 z-50 w-[280px] bg-[#F0EDE6] md:bg-transparent p-3 md:p-0 flex flex-col gap-3 transition-transform duration-300 ease-in-out md:relative md:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} overflow-y-auto hide-scrollbar`}>
-        <div className="bg-[#0b3d33] rounded-3xl p-6 flex items-center justify-between shadow-md border border-black/5 shrink-0 h-[88px] transition-transform duration-300 hover:shadow-lg group relative overflow-hidden">
+      <div className={`fixed inset-y-0 left-0 z-50 w-[280px] bg-[#F0EDE6] md:bg-transparent p-0 md:p-0 flex flex-col gap-0 transition-transform duration-300 ease-in-out md:relative md:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} overflow-hidden`}>
+        <div className="bg-[#0b3d33] rounded-none p-6 flex items-center justify-between shadow-md border border-black/5 border-b-0 shrink-0 h-[88px] transition-transform duration-300 hover:shadow-lg group relative overflow-hidden">
           <div className="absolute top-0 -left-[100%] w-1/2 h-full bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-[-20deg] group-hover:animate-[shine_1s_ease-in-out]"></div>
           <div className="flex items-center gap-3 relative z-10">
             <img src="/antara-logo.svg" alt="Antara Logo" className="h-8 w-8 filter brightness-0 invert transition-transform duration-500 group-hover:rotate-180" />
@@ -304,7 +304,7 @@ export default function AdminUI({ profile, user }) {
           </button>
         </div>
 
-        <div className="bg-[#0b3d33] rounded-3xl flex-1 flex flex-col shadow-md border border-black/5 py-6">
+        <div className="bg-[#0b3d33] rounded-none flex-1 flex flex-col shadow-md border border-black/5 border-t-0 py-6">
           <div className="px-6 flex items-center gap-4 mb-8">
             <div className="relative group cursor-pointer transition-transform duration-300 hover:scale-105 active:scale-95" onClick={() => document.getElementById("profile-upload").click()}>
               <img src={profilePic} className="w-12 h-12 rounded-full border-2 border-[#8CE0B7]/50 bg-white object-cover shadow-sm transition-colors group-hover:border-[#8CE0B7]" alt="Admin" />
@@ -324,7 +324,7 @@ export default function AdminUI({ profile, user }) {
             </div>
           </div>
 
-          <nav className="flex-1 px-4 space-y-2 overflow-y-auto hide-scrollbar">
+          <nav className="flex-1 px-4 space-y-2 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             <p className="text-[10px] font-black text-white/40 mb-4 px-3 uppercase tracking-widest">Dashboard</p>
             
            
@@ -408,7 +408,7 @@ export default function AdminUI({ profile, user }) {
         </div>
       </div>
 
-      <main className="flex-1 flex flex-col relative overflow-hidden bg-white md:rounded-[2rem] shadow-xl z-10 transition-all duration-500 border border-gray-100">
+      <main className="flex-1 flex flex-col relative overflow-hidden bg-white rounded-none shadow-xl z-10 transition-all duration-500 border border-gray-100">
         <header className="h-[76px] md:h-[96px] w-full flex items-center justify-between px-4 md:px-8 lg:px-10 border-b border-gray-50 shrink-0 bg-white/95 backdrop-blur-md z-20 sticky top-0 transition-colors">
           <div className="flex items-center gap-3 md:gap-0 animate-[fade-in-up_0.4s_ease-out]">
             <button 
@@ -480,7 +480,7 @@ export default function AdminUI({ profile, user }) {
                   </div>
 
                  
-                  <div className="max-h-[400px] overflow-y-auto divide-y divide-gray-50 hide-scrollbar">
+                  <div className="max-h-[400px] overflow-y-auto divide-y divide-gray-50 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                     {isLoadingNotifs ? (
                       <div className="p-8 text-center">
                         <Loader2 className="w-6 h-6 animate-spin text-[#0b3d33] mx-auto mb-2" />
