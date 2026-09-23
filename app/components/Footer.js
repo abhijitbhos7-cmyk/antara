@@ -4,8 +4,7 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    
-    <footer className="mt-12 w-full border-t border-gray-200 px-6 pt-8 pb-8 md:px-12 md:pb-12">
+    <footer className="mt-12 w-full border-t border-gray-200 px-6 pt-8 pb-2 md:px-12 md:pb-4">
       <div className="flex flex-col justify-between gap-12 xl:flex-row">
         
         <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 xl:w-3/4">
@@ -59,17 +58,9 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="mt-8 flex flex-col items-start justify-between gap-4 border-t border-gray-200 pt-4 text-xs font-medium text-gray-500 md:flex-row md:items-center">
-        <div className="flex flex-wrap gap-4 md:gap-6">
-          <Link href="/info/legal" className="transition hover:text-[#0b3d33]">Legal</Link>
-          <Link href="/info/privacy-center" className="transition hover:text-[#0b3d33]">Safety & Privacy Center</Link>
-          <Link href="/info/privacy-policy" className="transition hover:text-[#0b3d33]">Privacy Policy</Link>
-          <Link href="/info/cookies" className="transition hover:text-[#0b3d33]">Cookies</Link>
-          <Link href="/info/ads" className="transition hover:text-[#0b3d33]">About Ads</Link>
-          <Link href="/info/accessibility" className="transition hover:text-[#0b3d33]">Accessibility</Link>
-        </div>
+      <div className="mt-2 flex flex-col items-start justify-end gap-4 border-t border-gray-200 pt-4 text-xs font-medium text-gray-500 md:flex-row md:items-center">
         <div className="shrink-0">
-          &copy; {currentYear} Antara Wellness AB
+          &copy; {currentYear} Antara Wellness 
         </div>
       </div>
     </footer>
