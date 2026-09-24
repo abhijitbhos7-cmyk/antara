@@ -253,14 +253,14 @@ export default function useAntaraAccount() {
     await supabase.auth.signOut();
   }
 
-  const signInWithGoogle = async () => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
+  async function signInWithGoogle() {
+    const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}`,
-      },
+        redirectTo: `${window.location.origin}/` 
+      }
     });
-    return { data, error };
+    return { error };
   }
 
   const sendPhoneOtp = async (phone) => {

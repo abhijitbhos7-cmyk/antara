@@ -180,19 +180,38 @@ export default function UploadForm() {
   };
 
  
-  const handleDeleteProgram = async (programId) => {
+ const handleDeleteProgram = async (programId) => {
     if (!window.confirm("Are you sure you want to permanently delete this track from Antara?")) return;
 
-    const { error } = await supabase
-      .from("programs")
-      .delete()
-      .eq("id", programId);
+    
+    setMessage("⏳ Deleting track from database...");
 
-    if (error) {
-      alert("Error deleting track: " + error.message);
-    } else {
+    try {
+      const { error } = await supabase
+        .from("programs")
+        .delete()
+        .eq("id", programId);
+
+      
+      if (error) {
+        console.error("Supabase Delete Error:", error);
+        
+      
+        if (error.code === '23503') {
+          setMessage("❌ Cannot delete: This track is tied to users' saved playlists or listening history.");
+        } else {
+          setMessage(`❌ Error deleting track: ${error.message}`);
+        }
+        return;
+      }
+
+      
       setExistingPrograms((prev) => prev.filter((p) => p.id !== programId));
       setMessage("🗑️ Track deleted successfully.");
+      
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      setMessage("❌ An unexpected error occurred while deleting.");
     }
   };
 
